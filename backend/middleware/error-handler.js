@@ -1,8 +1,8 @@
 // import the HTTP status codes
-const { StatusCodes } = require('http-status-codes');
+import { StatusCodes } from 'http-status-codes';
 
 // create the error handler middleware
-const errorHandlerMiddleware = (err, req, res, next) => {
+export const errorHandlerMiddleware = (err, req, res, next) => {
     console.log(err);
     let customError = {
         // set the default message
@@ -30,6 +30,3 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
     return res.status(customError.statusCode).json({ msg: customError.msg });
 };
-
-// export errorHandlerMiddleware to be used by app.js
-module.exports = errorHandlerMiddleware;

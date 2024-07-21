@@ -1,15 +1,24 @@
-require('dotenv').config();
-require('express-async-errors');
+import dotenv from 'dotenv';
+dotenv.config();
+
+import err from 'express-async-errors';
 
 // import express
-const express = require('express');
+import express from 'express';
 const app = express();
 
 // import database
+import { testFunc } from './db/connect.js';
 
 // import error handlers
-const notFoundMiddleware = require('./middleware/not-found');
-const errorHandlerMiddleware = require('./middleware/error-handler');
+import { notFoundMiddleware } from './middleware/not-found.js';
+import { errorHandlerMiddleware } from './middleware/error-handler.js';
+
+// test for database connection
+app.get("/test", async (req, res) => {
+    const t = await testFunc();
+    res.send(t)
+});
 
 // setup the express routes
 app.use(express.json());
