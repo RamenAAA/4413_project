@@ -1,0 +1,133 @@
+h1{
+  text-align: center;
+  font-family: sans-serif;
+  color:white;
+}
+
+.logo-container{
+  text-align: center;
+}
+
+.logo{
+  max-width: 160px;
+  margin-top:10px;
+  padding: 5px;
+}
+
+.search-container{
+  text-align: center;
+  padding: 5px;
+}
+
+.search{
+  width: 200px;
+  height: 5%;
+  padding:5px;
+  border-radius: 15px;
+  font-family: sans-serif;
+}
+
+.navbar {
+  width: 100%;
+  background-color: #0e2740; 
+  position: fixed; 
+  overflow:auto;
+  top: 0; 
+  left: 0; 
+  align-items: center;
+}
+
+.pageHeader{
+  text-align: left;
+  padding-left: 20px;
+
+  font-family: sans-serif;
+}
+
+.route{
+  padding-top: 180px;
+}
+
+.home, .item, .signin, .signup, .cart {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.filters{
+  text-align: left;
+  padding-left: 20px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 5px; 
+  justify-content: center;
+}
+
+
+.card {
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  text-align: center;
+  font-family: sans-serif;
+  width: 250px;
+  height: 400px;
+  display: inline-block;
+}
+
+.addButton{
+  border-radius: 10px;
+  height: 40px;
+  width: 200px;
+  margin-top: 40px;
+  border-style: solid;
+  background-color: #0e2740;
+  border-color: #0e2740;
+  color: white;
+  font-family: sans-serif;
+  font-size: 15px;
+}
+
+.addButton:hover{
+  background-color: #276db3;
+  border-color: #276db3;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-family: sans-serif;
+  margin: 5px;
+  padding: 2px;
+  text-decoration: none;
+  color:white;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.links :hover {
+  background-color: #276db3;
+  border-color: #276db3;
+}
+
+.item{
+  padding-left: 10%;
+  padding-right: 10%;
+  margin: 10px;
+  
+  font-family: sans-serif;
+  max-width: 1000px;
+  display: inline-block;
+}
+
+label{
+  font-family: sans-serif;
+}
+
+
+
