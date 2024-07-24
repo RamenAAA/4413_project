@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 
 // import the functions that retrieve the information from the database
 import { 
-    getAllItems, getSingleItem, getItemsByCategory, getItemsByBrand, getItemsBySize, getItemsByColor, getItemsSortedByPrice, getItemsSortedByName 
+    getAllItems, getSingleItem, getItemsByName, getItemsByCategory, getItemsByBrand, getItemsBySize, getItemsByColor, getItemsSortedByPrice, getItemsSortedByName 
 } from '../controllers/productController.js';
 
 // retrives all the products to send to the client 
@@ -42,7 +42,22 @@ router.route('/:id').get( async (req, res) => {
     }
 });
 
-// retrieve the products filtered using category, brand, size, and color
+// retrieve the products filtered using name, category, brand, size, and color
+router.route('/filter/name/:name').get( async (req, res) => {
+    try {
+        // extract the name
+        const name = req.params.name;
+
+        // get items of the same name
+        const items = await getItemsByName(name);
+
+        // send the OK status with the result
+        res.status(StatusCodes.OK).send(items);
+    } catch (err) {
+        res.status(StatusCodes.NOT_FOUND);
+    }
+}); // end of name route
+
 router.route('/filter/category/:category').get( async (req, res) => {
     try {
         // extract the category
