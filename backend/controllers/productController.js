@@ -89,12 +89,12 @@ export async function getItemsSortedByPrice(sort) {
 }
 
 // get the items sorted by name alphabetically
-export async function getItemsSortedByName(sort) {
+export async function getItemsSortedByName() {
     // sql query to sort items by name
     const [ rows ] = await pool.query(`
         SELECT *
         FROM Items
-        ORDER BY name ?;
-        `, [sort]);
+        ORDER BY name ASC;
+        `);
     return rows;
 }

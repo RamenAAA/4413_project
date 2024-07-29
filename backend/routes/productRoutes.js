@@ -1,6 +1,6 @@
 // import the express router to route the queries from the client to the appropriate function
 import express from 'express';
-export const router = express.Router();
+export const productRouter = express.Router();
 
 // import the HTTP status codes to send success and failure codes
 import { StatusCodes } from 'http-status-codes';
@@ -12,14 +12,13 @@ import {
 
 // retrives all the products to send to the client 
 // TODO: add the admin route to create the product here with POST method and add authentication and authorization middleware
-router.route('/').get( async (req, res) => {
-    // try catch block to catch any errors from the SQL database
+productRouter.route('/').get( async (req, res) => {
     try{
         // get all items from the database
         const items = await getAllItems();
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND)
     }
@@ -27,7 +26,7 @@ router.route('/').get( async (req, res) => {
 
 // retrieve a single product using its ID
 // TODO: add the admin route to update the single product and delete the single product using PATCH and DELETE
-router.route('/:id').get( async (req, res) => {
+productRouter.route('/:id').get( async (req, res) => {
     try {
         // extract the item ID
         const id = req.params.id;
@@ -36,14 +35,14 @@ router.route('/:id').get( async (req, res) => {
         const item = await getSingleItem(id);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(item);
+        res.status(StatusCodes.OK).json({ item });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 });
 
 // retrieve the products filtered using name, category, brand, size, and color
-router.route('/filter/name/:name').get( async (req, res) => {
+productRouter.route('/filter/name/:name').get( async (req, res) => {
     try {
         // extract the name
         const name = req.params.name;
@@ -52,13 +51,13 @@ router.route('/filter/name/:name').get( async (req, res) => {
         const items = await getItemsByName(name);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 }); // end of name route
 
-router.route('/filter/category/:category').get( async (req, res) => {
+productRouter.route('/filter/category/:category').get( async (req, res) => {
     try {
         // extract the category
         const category = req.params.category;
@@ -67,13 +66,13 @@ router.route('/filter/category/:category').get( async (req, res) => {
         const items = await getItemsByCategory(category);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 }); // end of category route
 
-router.route('/filter/brand/:brand').get( async (req, res) => {
+productRouter.route('/filter/brand/:brand').get( async (req, res) => {
     try {
         // extract the brand
         const brand = req.params.brand;
@@ -82,13 +81,13 @@ router.route('/filter/brand/:brand').get( async (req, res) => {
         const items = await getItemsByBrand(brand);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 }); // end of brand route
 
-router.route('/filter/size/:size').get( async (req, res) => {
+productRouter.route('/filter/size/:size').get( async (req, res) => {
     try {
         // extract the size
         const size = req.params.size;
@@ -97,13 +96,13 @@ router.route('/filter/size/:size').get( async (req, res) => {
         const items = await getItemsBySize(size);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 }); // end of size route
 
-router.route('/filter/color/:color').get( async (req, res) => {
+productRouter.route('/filter/color/:color').get( async (req, res) => {
     try {
         // extract the color
         const color = req.params.color;
@@ -112,14 +111,14 @@ router.route('/filter/color/:color').get( async (req, res) => {
         const items = await getItemsByColor(color);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 }); // end of color route
 
 // retrieve the products sorted by price and name ascending or descending
-router.route('/sort/price/:sort').get( async (req, res) => {
+productRouter.route('/sort/price/:sort').get( async (req, res) => {
     try {
         // extract the sort
         const sort = req.params.sort;
@@ -128,22 +127,19 @@ router.route('/sort/price/:sort').get( async (req, res) => {
         const items = await getItemsSortedByPrice(sort);
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
 }); // end of sort by price route
 
-router.route('/sort/name/:sort').get( async (req, res) => {
+productRouter.route('/sort/name/').get( async (req, res) => {
     try {
-        // extract the sort
-        const sort = req.params.sort;
-
         // get items sorted by name
-        const items = await getItemsSortedByName(sort);
+        const items = await getItemsSortedByName();
 
         // send the OK status with the result
-        res.status(StatusCodes.OK).send(items);
+        res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }

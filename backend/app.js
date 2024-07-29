@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import err from 'express-async-errors';
-
 // import express
 import express from 'express';
 const app = express();
@@ -12,8 +10,8 @@ const app = express();
 import { pool } from './db/connect.js';
 
 // import routers
-import { router } from './routes/productRoutes.js';
-const productRouter = router;
+import { productRouter } from './routes/productRoutes.js';
+import { authRouter } from './routes/authRoutes.js';
 
 // import error handlers
 import { notFoundMiddleware } from './middleware/not-found.js';
@@ -23,7 +21,8 @@ import { errorHandlerMiddleware } from './middleware/error-handler.js';
 app.use(express.json());
 
 // use the routers
-app.use('/api/products', productRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/products', productRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
