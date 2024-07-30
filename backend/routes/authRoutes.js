@@ -17,14 +17,6 @@ authRouter.route('/register').post( async (req, res) => {
         // extract all the information from the request body
         const { firstName, lastName, email, password, role, phoneNum } = req.body;
 
-        
-        // const firstName = req.params.firstName;
-        // const lastName = req.params.lastName;
-        // const email = req.params.email;
-        // const password = req.params.password;
-        // const role = req.params.role;
-        // const phoneNum = req.params.phoneNum;
-
         const result = await register(firstName, lastName, email, password, role, phoneNum);
 
         res.send(StatusCodes.CREATED).json({ result });
@@ -38,10 +30,6 @@ authRouter.route('/login').post( async (req, res) => {
     try{
         // get the email and password
         const { email, password } = req.body;
-
-
-        // const email = req.params.email;
-        // const password = req.params.password;
 
         const result = await login(email, password);
 

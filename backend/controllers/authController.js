@@ -12,8 +12,6 @@ export async function register(firstName, lastName, email, password, role, phone
         VALUES (?,?,?,?,?,?)
         `, [firstName, lastName, email, password, role, phone]);
 
-    console.log(result[0]);
-
     return result.insertId;
 }
 
