@@ -6,6 +6,7 @@ import Cart from './Cart.jsx'
 import Item from './Item.jsx'
 import SignIn from './SignIn.jsx'
 import SignUp from './SignUp.jsx'
+import Profile from './Profile.jsx'
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/cart" element={<Cart/>} />
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/signup" element={<SignUp/>} />
+          <Route path="/profile" element={<Profile/>} />
           <Route path="/item/:id" element={<Item />} />
         </Routes>
       </div>

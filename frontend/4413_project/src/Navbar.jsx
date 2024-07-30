@@ -16,6 +16,7 @@ function Navbar(){
                 <Link className="links" to="cart"> Cart</Link>
                 <Link className="links" to="signin"> Sign In</Link>
                 <Link className="links" to="signup"> Sign Up</Link>
+                <Link className="links" to="profile"> Profile</Link>
             </nav>
         </div>
     );
