@@ -19,11 +19,11 @@ h1{
   padding: 5px;
 }
 
-.search{
+.search, .userInput, .passInput, .billAdrInput, .shipAdrInput{
   width: 200px;
   height: 5%;
   padding:5px;
-  border-radius: 15px;
+  border-radius: 10px;
   font-family: sans-serif;
 }
 
@@ -39,7 +39,6 @@ h1{
 
 .pageHeader{
   text-align: left;
-  padding-left: 20px;
 
   font-family: sans-serif;
 }
@@ -48,14 +47,13 @@ h1{
   padding-top: 180px;
 }
 
-.home, .item, .signin, .signup, .cart {
+.home, .item, .signin, .signup, .cart, .profile {
   padding-left: 10%;
   padding-right: 10%;
 }
 
 .filters{
   text-align: left;
-  padding-left: 20px;
 }
 
 .products {
@@ -70,7 +68,7 @@ h1{
   border: 1px solid lightgray;
   border-radius: 10px;
   padding: 20px;
-  margin: 20px;
+  margin-top: 20px;
   text-align: center;
   font-family: sans-serif;
   width: 250px;
@@ -78,7 +76,41 @@ h1{
   display: inline-block;
 }
 
-.addButton{
+.cart-container{
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: row;
+}
+
+.cartItem {
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: left;
+  font-family: sans-serif;
+  width: 1200px;
+  height: 250px;
+}
+
+.buy-container{
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
+  text-align: center;
+  font-family: sans-serif;
+  width: 200px;
+  height: 250px;
+}
+
+.buyText{
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+.addButton, .checkoutButton, .signInButton, .signUpButton{
   border-radius: 10px;
   height: 40px;
   width: 200px;
@@ -91,7 +123,7 @@ h1{
   font-size: 15px;
 }
 
-.addButton:hover{
+.addButton:hover, .checkoutButton:hover, .signInButton:hover, .signUpButton:hover{
   background-color: #276db3;
   border-color: #276db3;
 }
@@ -125,9 +157,22 @@ h1{
   display: inline-block;
 }
 
+.signin, .signup{
+  text-align: center;
+  font-family: sans-serif;
+  border: 1px solid lightgray;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 20%;
+
+}
+
 label{
   font-family: sans-serif;
 }
+
 
 
 
