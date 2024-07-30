@@ -117,30 +117,51 @@ productRouter.route('/filter/color/:color').get( async (req, res) => {
     }
 }); // end of color route
 
-// retrieve the products sorted by price and name ascending or descending
-productRouter.route('/sort/price/:sort').get( async (req, res) => {
+// retrieve the products sorted by price (ascending and descending) and name (alphabetically ascending and descending)
+productRouter.route('/sort/price/asc').get( async (req, res) => {
     try {
-        // extract the sort
-        const sort = req.params.sort;
-
         // get items sorted by price
-        const items = await getItemsSortedByPrice(sort);
+        const items = await getItemsSortedByPrice(true);
 
         // send the OK status with the result
         res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
-}); // end of sort by price route
+}); // end of sort by price ASC route
 
-productRouter.route('/sort/name/').get( async (req, res) => {
+productRouter.route('/sort/price/desc').get( async (req, res) => {
+    try {
+        // get items sorted by price
+        const items = await getItemsSortedByPrice(false);
+
+        // send the OK status with the result
+        res.status(StatusCodes.OK).json({ items });
+    } catch (err) {
+        res.status(StatusCodes.NOT_FOUND);
+    }
+}); // end of sort by price DESC route
+
+productRouter.route('/sort/name/asc').get( async (req, res) => {
     try {
         // get items sorted by name
-        const items = await getItemsSortedByName();
+        const items = await getItemsSortedByName(true);
 
         // send the OK status with the result
         res.status(StatusCodes.OK).json({ items });
     } catch (err) {
         res.status(StatusCodes.NOT_FOUND);
     }
-}); // end of sort by name route
+}); // end of sort by name ASC route
+
+productRouter.route('/sort/name/desc').get( async (req, res) => {
+    try {
+        // get items sorted by name
+        const items = await getItemsSortedByName(false);
+
+        // send the OK status with the result
+        res.status(StatusCodes.OK).json({ items });
+    } catch (err) {
+        res.status(StatusCodes.NOT_FOUND);
+    }
+}); // end of sort by name ASC route

@@ -78,23 +78,46 @@ export async function getItemsByColor(color) {
 }
 
 // get the items sorted by price
-export async function getItemsSortedByPrice(sort) {
-    // sql query to sort items by price
-    const [ rows ] = await pool.query(`
-        SELECT *
-        FROM Items
-        ORDER BY price ?;
-        `, [sort]);
-    return rows;
+export async function getItemsSortedByPrice(sortAsc) {
+
+    // if sortAsc is true, sort the data in ascending order
+    if (sortAsc) {
+        // sql query to sort items by price
+        const [ rows ] = await pool.query(`
+            SELECT *
+            FROM Items
+            ORDER BY price ASC;
+            `);
+        return rows;
+    } else { // if false, sort the data in descending order
+        // sql query to sort items by price
+        const [ rows ] = await pool.query(`
+            SELECT *
+            FROM Items
+            ORDER BY price DESC;
+            `);
+        return rows;
+    }
 }
 
 // get the items sorted by name alphabetically
-export async function getItemsSortedByName() {
-    // sql query to sort items by name
-    const [ rows ] = await pool.query(`
-        SELECT *
-        FROM Items
-        ORDER BY name ASC;
-        `);
-    return rows;
+export async function getItemsSortedByName(sortAsc) {
+    // if sortAsc is true, sort the data in ascending order
+    if (sortAsc) {
+        // sql query to sort items by name
+        const [ rows ] = await pool.query(`
+            SELECT *
+            FROM Items
+            ORDER BY name ASC;
+            `);
+        return rows;
+    } else { // if false, sort the data in descending order
+        // sql query to sort items by name
+        const [ rows ] = await pool.query(`
+            SELECT *
+            FROM Items
+            ORDER BY name DESC;
+            `);
+        return rows;
+    }
 }
