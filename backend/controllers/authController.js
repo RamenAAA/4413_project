@@ -6,14 +6,13 @@ import { hash, compare } from '../Utils/password.js';
 
 
 export async function register(firstName, lastName, email, password, role, phone) {
-    // hash the password
-    const hashedPassword = hash(password);
-
     // create a new user
     const [ result ] = await pool.query(`
         INSERT INTO Users (firstName, lastName, email, password, role, phone) 
         VALUES (?,?,?,?,?,?)
-        `, [firstName, lastName, email, hashedPassword, role, phone]);
+        `, [firstName, lastName, email, password, role, phone]);
+
+    console.log(result[0]);
 
     return result.insertId;
 }
@@ -35,7 +34,7 @@ export async function login(email, password) {
     }
 
     // compare the passwords
-    const match = compare(password, result[0].password);
+    const match = (password == result[0].password);
 
     // check if the passwords matched
     if(match) {

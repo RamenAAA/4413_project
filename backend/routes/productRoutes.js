@@ -33,7 +33,7 @@ productRouter.route('/:id').get( async (req, res) => {
 
         // get the specific item
         const item = await getSingleItem(id);
-
+        
         // send the OK status with the result
         res.status(StatusCodes.OK).json({ item });
     } catch (err) {
