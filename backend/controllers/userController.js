@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { pool } from "../db/connect.js";
-import { CustomAPIError, BadRequestError, UnauthenticatedError, UnauthorizedError, NotFoundError } from "../errors/index.js";
+import "../errors/index.js";
 
 export const getSingleUser = async (req, res) => {
     // get the user id
