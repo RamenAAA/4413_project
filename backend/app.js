@@ -1,17 +1,20 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+// import async error handlers to handle errors from the controllers
+import 'express-async-errors';
+
 // import express
 import express from 'express';
 const app = express();
 
 // import database
-// TODO: connect to the database in app.js
 import { pool } from './db/connect.js';
 
 // import routers
 import { productRouter } from './routes/productRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
+import { userRouter } from './routes/userRoutes.js';
 
 // import error handlers
 import { notFoundMiddleware } from './middleware/not-found.js';
@@ -23,6 +26,7 @@ app.use(express.json());
 // use the routers
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/users', userRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

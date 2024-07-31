@@ -9,7 +9,6 @@ import { StatusCodes } from 'http-status-codes';
 import { 
     register, login, logout
 } from '../controllers/authController.js';
-import e from 'express';
 
 // register the user
 authRouter.route('/register').post( async (req, res) => {
