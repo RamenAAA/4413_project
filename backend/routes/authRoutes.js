@@ -11,24 +11,13 @@ import {
 } from '../controllers/authController.js';
 
 // register the user
-authRouter.route('/register').post( async (req, res) => {
-    try{
-        // extract all the information from the request body
-        const { firstName, lastName, email, password, role, phoneNum } = req.body;
-
-        const result = await register(firstName, lastName, email, password, role, phoneNum);
-
-        res.send(StatusCodes.CREATED).json({ result });
-    } catch (err) {
-        res.status(StatusCodes.NOT_FOUND)
-    }
-});
+authRouter.post('/register', register);
 
 // login the user
+authRouter.post('/login', login);
 authRouter.route('/login').post( async (req, res) => {
     try{
-        // get the email and password
-        const { email, password } = req.body;
+        
 
         const result = await login(email, password);
 

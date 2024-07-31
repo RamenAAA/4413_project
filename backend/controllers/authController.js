@@ -1,24 +1,36 @@
 // import the SQL database pool, HTTP status codes, and custom error messages
 import { pool } from '../db/connect.js';
 import { StatusCodes } from 'http-status-codes';
-// import * as CustomError from '../errors';
-import { hash, compare } from '../Utils/password.js';
+import "../errors/index.js";
+import { attachCookiesToResponse } from '../Utils/index.js';
 
+export const register = async (req, res) => {
+    // extract the information from the request body
+    const { firstName, lastName, email, password, role, phoneNum } = req.body;
 
-export async function register(firstName, lastName, email, password, role, phone) {
     // create a new user
     const [ result ] = await pool.query(`
         INSERT INTO Users (firstName, lastName, email, password, role, phone) 
         VALUES (?,?,?,?,?,?)
         `, [firstName, lastName, email, password, role, phone]);
 
-    return result.insertId;
+    // variable to hold the user name, id, and role for the token
+    const userInfo = {name:firstName, userId:result[0].insertId, role:role}
+
+    // creates a cookie with the authenticating token and sends it as a response
+    attachCookiesToResponse({res,user:userInfo});
+
+    // send the user info
+    res.status(StatusCodes.CREATED).send({ user : userInfo });
 }
 
-export async function login(email, password) {
+export const login = async (req, res) => {
+    // get the email and password
+    const { email, password } = req.body;
+
     // check if the email or password exists
     if(!email || !password) {
-        return StatusCodes.BAD_REQUEST;
+        throw new CustomError.BadRequestError("Please provide email and password");
     }
 
     // retrieve the user
@@ -27,8 +39,8 @@ export async function login(email, password) {
         `, [email]);
 
     // check if the user exists
-    if( result === 0) {
-        return StatusCodes.UNAUTHORIZED;
+    if( !result[0]) {
+        throw new CustomError.NotFoundError("The user does not exist");
     }
 
     // compare the passwords
@@ -36,12 +48,11 @@ export async function login(email, password) {
 
     // check if the passwords matched
     if(match) {
-        return result;
+        res.status(StatusCodes.OK).send("User logged in");
     } else {
-        return StatusCodes.UNAUTHORIZED;
+        throw new CustomError.UnauthorizedError("Incorrect User Credentials");
     }
 }
 
-export async function logout() {
-
+export const logout = async (req, res) => {
 }

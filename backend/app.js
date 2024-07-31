@@ -8,6 +8,10 @@ import 'express-async-errors';
 import express from 'express';
 const app = express();
 
+// import the cookie parser package
+import pkg from 'cookie-parser';
+const cookieParser = pkg;
+
 // import database
 import { pool } from './db/connect.js';
 
@@ -22,6 +26,13 @@ import { errorHandlerMiddleware } from './middleware/error-handler.js';
 
 // setup the express routes
 app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET));
+
+// add the home router
+app.get('/api/v1', (req, res) => {
+    console.log(req.signedCookies);
+    res.send("e-commerce api");
+})
 
 // use the routers
 app.use('/api/v1/auth', authRouter);
