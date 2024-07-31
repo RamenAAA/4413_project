@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { pool } from "../db/connect.js";
 import "../errors/index.js";
 import { BadRequestError, UnauthenticatedError } from "../errors/index.js";
+import { checkPermissions } from "../Utils/index.js";
 
 // get the user information for the user specified by id parameter
 export const getSingleUser = async (req, res) => {
@@ -11,7 +12,7 @@ export const getSingleUser = async (req, res) => {
   //query the database for the user with the specified id
   const [result] = await pool.query(
     `
-        SELECT firstName, lastName, email, phone FROM Users
+        SELECT id, firstName, lastName, email, phone FROM Users
         WHERE id = ?
         `,
     [userId]
@@ -22,6 +23,8 @@ export const getSingleUser = async (req, res) => {
     throw new BadRequestError("The user does not exist");
   }
 
+  // check if the user requesting the information is the actual owner of that information
+  checkPermissions(req.user, result[0].id);
   res.status(StatusCodes.OK).send(result[0]);
 };
 
