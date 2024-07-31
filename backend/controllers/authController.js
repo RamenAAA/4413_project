@@ -12,13 +12,13 @@ export const register = async (req, res) => {
     const [ result ] = await pool.query(`
         INSERT INTO Users (firstName, lastName, email, password, role, phone) 
         VALUES (?,?,?,?,?,?)
-        `, [firstName, lastName, email, password, role, phone]);
+        `, [firstName, lastName, email, password, role, phoneNum]);
 
     // variable to hold the user name, id, and role for the token
-    const userInfo = {name:firstName, userId:result[0].insertId, role:role}
+    const userInfo = {name: firstName, userId: result[0].insertId, role: role};
 
     // creates a cookie with the authenticating token and sends it as a response
-    attachCookiesToResponse({res,user:userInfo});
+    attachCookiesToResponse({res, user: userInfo});
 
     // send the user info
     res.status(StatusCodes.CREATED).send({ user : userInfo });
@@ -49,7 +49,7 @@ export const login = async (req, res) => {
     // check if the passwords matched
     if(match) {
         // get the user information for the token
-        const userInfo = { name:result[0].firstName, userId:result[0].id, role:result[0].role }
+        const userInfo = { name: result[0].firstName, userId:result[0].id, role:result[0].role }
 
         // creates a cookie with the authenticating token and sends it as a response
         attachCookiesToResponse({res,user:userInfo});

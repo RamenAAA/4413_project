@@ -21,8 +21,8 @@ import {
 
 // update the user information and password
 userRouter.get('/showCurrentUser', authenticateUser, showCurrentUser);
-userRouter.patch('/updateUser', authenticateUser, updateUser);
-userRouter.patch('/updatePassword', authenticateUser, updateUserPassword);
+userRouter.patch('/updateUser', authenticateUser, authorizePermissions('admin', 'customer'), updateUser);
+userRouter.patch('/updatePassword', authenticateUser, authorizePermissions('admin', 'customer'), updateUserPassword);
 
 // get the single user information
 userRouter.get(
