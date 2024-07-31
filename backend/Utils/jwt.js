@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // import the JWT package
-import * as jwt from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const jwt = pkg;
 
 // function to create a JWT token
 export const createJWT = ({payload}) => {

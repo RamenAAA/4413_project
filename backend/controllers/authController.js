@@ -22,7 +22,7 @@ export const register = async (req, res) => {
 
     // send the user info
     res.status(StatusCodes.CREATED).send({ user : userInfo });
-}
+};
 
 export const login = async (req, res) => {
     // get the email and password
@@ -39,8 +39,8 @@ export const login = async (req, res) => {
         `, [email]);
 
     // check if the user exists
-    if( !result[0]) {
-        throw new CustomError.NotFoundError("The user does not exist");
+    if(!result[0]) {
+        throw new CustomError.UnauthenticatedError("Invalid Credentials");
     }
 
     // compare the passwords
@@ -48,11 +48,25 @@ export const login = async (req, res) => {
 
     // check if the passwords matched
     if(match) {
+        // get the user information for the token
+        const userInfo = { name:result[0].firstName, userId:result[0].id, role:result[0].role }
+
+        // creates a cookie with the authenticating token and sends it as a response
+        attachCookiesToResponse({res,user:userInfo});
+
         res.status(StatusCodes.OK).send("User logged in");
     } else {
-        throw new CustomError.UnauthorizedError("Incorrect User Credentials");
+        throw new CustomError.UnauthenticatedError("Incorrect Credentials");
     }
-}
+};
 
 export const logout = async (req, res) => {
-}
+    // remove the cookie
+    res.cookie('token', 'logout', {
+        httpOnly: true,
+        expires: new Date(Date.now()),
+    });
+
+    // send the 200 status
+    res.status(StatusCodes.OK);
+};
