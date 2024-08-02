@@ -22,8 +22,10 @@ import {
 
 // import the admin functions
 import {
-    createProduct
-} from '../controllers/adminController.js';
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../controllers/adminController.js";
 
 // import the autentication and authorization middleware
 import {
@@ -32,17 +34,17 @@ import {
 } from "../middleware/authentication.js";
 
 // retrives all the products to send to the client
-// TODO: add the admin route to create the product here with POST method and add authentication and authorization middleware
-productRouter.route("/").get(getAllItems);
-
-// admin route to create a new product
 productRouter
-  .route("/createProduct")
-  .post([authenticateUser, authorizePermissions("admin")], createProduct);
+  .route("/")
+  .post([authenticateUser, authorizePermissions("admin")], createProduct)
+  .get(getAllItems);
 
 // retrieve a single product using its ID
-// TODO: add the admin route to update the single product and delete the single product using PATCH and DELETE
-productRouter.route("/:id").get(getSingleItem);
+productRouter
+  .route("/:id")
+  .get(getSingleItem)
+  .post([authenticateUser, authorizePermissions("admin")], updateProduct)
+  .delete([authenticateUser, authorizePermissions("admin")], deleteProduct);
 
 // retrieve the products filtered using name, category, brand, size, and color
 productRouter.route("/filter/name/:name").get(getItemsByName); // end of name route
