@@ -12,6 +12,10 @@ const app = express();
 import pkg from "cookie-parser";
 const cookieParser = pkg;
 
+// import express file upload package for image upload
+import pkg from 'express-fileupload';
+const fileUpload = pkg;
+
 // import database
 import { pool } from "./db/connect.js";
 
@@ -27,6 +31,10 @@ import { errorHandlerMiddleware } from "./middleware/error-handler.js";
 // setup the express routes
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+
+// setup the public folder for image uploads
+app.use(express.static('./public'));
+app.use(fileUpload());
 
 // add the home router
 app.get("/api/v1", (req, res) => {

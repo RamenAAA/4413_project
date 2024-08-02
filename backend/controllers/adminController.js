@@ -10,6 +10,10 @@ import { StatusCodes } from "http-status-codes";
 // import the ID generator from Utils
 import { generateID } from "../Utils/index.js";
 
+// import the path module for uploading images
+import pkg from "path";
+const path = pkg;
+
 // create a new product
 export const createProduct = async (req, res) => {
   // extract the information provided by the admin
@@ -66,4 +70,44 @@ export const deleteProduct = async (req, res) => {
   await pool.query(`DELETE FROM Items WHERE id = ?`, [id]);
 
   res.status(StatusCodes.OK).send("Item deleted");
+};
+
+// upload the product image
+export const uploadImage = async (req, res) => {
+  // check if the image file is uploaded or not
+  if (!req.files) {
+    throw new CustomError.BadRequestError("No File Uploaded");
+  }
+
+  // get the image data
+  const productImage = req.files.image;
+
+  // raise an error if the selected file type is not an image
+  if (!productImage.mimetype.startsWith("image")) {
+    throw new CustomError.BadRequestError("Please Upload Image");
+  }
+
+  // set the max upload size
+  const maxSize = 1024 * 1024;
+
+  // raise an error if the image size exceeds max size
+  if (productImage.size > maxSize) {
+    throw new CustomError.BadRequestError(
+      "Please Upload Image smaller than 1MB"
+    );
+  }
+
+  // set the image path to the public/uploads
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads/" + `${productImage.name}`
+  );
+
+  // move the image to the uploads folder
+  await productImage.mv(imagePath);
+
+  // add the image path to the database
+  await pool.query(`INSERT INTO Items (image) VALUES (?)`, [imagePath]);
+
+  res.status(StatusCodes.OK).send(`/uploads/${productImage.name}`);
 };

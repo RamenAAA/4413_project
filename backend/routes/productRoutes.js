@@ -25,6 +25,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadImage,
 } from "../controllers/adminController.js";
 
 // import the autentication and authorization middleware
