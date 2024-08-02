@@ -1,123 +1,223 @@
 // import the database connection
-import { pool } from '../db/connect.js';
+import { pool } from "../db/connect.js";
+
+// import the custom errors
+import * as CustomError from "../errors/index.js";
+
+// import the HTTP status codes
+import { StatusCodes } from "http-status-codes";
 
 // get all the items from the database
-export async function getAllItems() {
-    // sql query to get all items
-    const [ rows ] = await pool.query("SELECT * FROM Items");
-    return rows;
-}
+export const getAllItems = async (req, res) => {
+  // sql query to get all items
+  const [rows] = await pool.query("SELECT * FROM Items");
+
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("Invalid query");
+  }
+
+  // return the items
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get items specified by ID
-export async function getSingleItem(ID) {
-    // sql query to get the item by ID
-    const [ rows ] = await pool.query(`
+export const getSingleItem = async (req, res) => {
+  // extract the item ID
+  const id = req.params.id;
+
+  // sql query to get the item by ID
+  const [rows] = await pool.query(
+    `
         SELECT * 
         FROM Items 
         WHERE id = ?
-        `, [ID]);
+        `,
+    [id]
+  );
 
-    return rows;
-}
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get item by name
-export async function getItemsByName(name) {
-    // sql query to get the items by name
-    const [ rows ] = await pool.query(`
+export const getItemsByName = async (req, res) => {
+  // extract the name
+  const name = req.params.name;
+
+  // sql query to get the items by name
+  const [rows] = await pool.query(
+    `
         SELECT * 
         FROM Items 
         WHERE name = ?
-        `, [name]);
+        `,
+    [name]
+  );
 
-    return rows;
-}
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get the items filtered by specific category
-export async function getItemsByCategory(category) {
-    // sql query to get items by category
-    const [ rows ] = await pool.query(`
+export const getItemsByCategory = async (req, res) => {
+  // extract the category
+  const category = req.params.category;
+
+  // sql query to get items by category
+  const [rows] = await pool.query(
+    `
         SELECT * 
         FROM Items 
         WHERE category = ?
-        `, [category]);
+        `,
+    [category]
+  );
 
-    return rows;
-}
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get the items filtered by specific brand
-export async function getItemsByBrand(brand) {
-    // sql query to get items by brand
-    const [ rows ] = await pool.query(`
+export const getItemsByBrand = async (req, res) => {
+  // extract the brand
+  const brand = req.params.brand;
+
+  // sql query to get items by brand
+  const [rows] = await pool.query(
+    `
         SELECT * 
         FROM Items 
         WHERE brand = ?
-        `, [brand]);
-    return rows;
-}
+        `,
+    [brand]
+  );
+
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get the items filtered by specific size
-export async function getItemsBySize(size) {
-    // sql query to get items by size
-    const [ rows ] = await pool.query(`
+export const getItemsBySize = async (req, res) => {
+  // extract the size
+  const size = req.params.size;
+
+  // sql query to get items by size
+  const [rows] = await pool.query(
+    `
         SELECT * 
         FROM Items 
         WHERE size = ?
-        `, [size]);
-    return rows;
-}
+        `,
+    [size]
+  );
+
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get the items filtered by specific color
-export async function getItemsByColor(color) {
-    // sql query to get items by color
-    const [ rows ] = await pool.query(`
+export const getItemsByColor = async (req, res) => {
+  // extract the color
+  const color = req.params.color;
+
+  // sql query to get items by color
+  const [rows] = await pool.query(
+    `
         SELECT * 
         FROM Items 
         WHERE color = ?
-        `, [color]);
-    return rows;
-}
+        `,
+    [color]
+  );
+
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get the items sorted by price
-export async function getItemsSortedByPrice(sortAsc) {
+export const getItemsSortedByPriceAsc = async (req, res) => {
+  // sql query to sort items by price ascending
+  const [rows] = await pool.query(`
+        SELECT *
+        FROM Items
+        ORDER BY price ASC;
+        `);
 
-    // if sortAsc is true, sort the data in ascending order
-    if (sortAsc) {
-        // sql query to sort items by price
-        const [ rows ] = await pool.query(`
-            SELECT *
-            FROM Items
-            ORDER BY price ASC;
-            `);
-        return rows;
-    } else { // if false, sort the data in descending order
-        // sql query to sort items by price
-        const [ rows ] = await pool.query(`
-            SELECT *
-            FROM Items
-            ORDER BY price DESC;
-            `);
-        return rows;
-    }
-}
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
+export const getItemsSortedByPriceDesc = async (req, res) => {
+  // sql query to sort items by price descending
+  const [rows] = await pool.query(`
+        SELECT *
+        FROM Items
+        ORDER BY price DESC;
+        `);
+
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
 
 // get the items sorted by name alphabetically
-export async function getItemsSortedByName(sortAsc) {
-    // if sortAsc is true, sort the data in ascending order
-    if (sortAsc) {
-        // sql query to sort items by name
-        const [ rows ] = await pool.query(`
-            SELECT *
-            FROM Items
-            ORDER BY name ASC;
-            `);
-        return rows;
-    } else { // if false, sort the data in descending order
-        // sql query to sort items by name
-        const [ rows ] = await pool.query(`
-            SELECT *
-            FROM Items
-            ORDER BY name DESC;
-            `);
-        return rows;
-    }
-}
+export const getItemsSortedByNameAsc = async (req, res) => {
+  // sql query to sort items by name ascending
+  const [rows] = await pool.query(`
+          SELECT *
+          FROM Items
+          ORDER BY name ASC;
+          `);
+
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
+export const getItemsSortedByNameDesc = async (req, res) => {
+  // sql query to sort items by name descending
+  const [rows] = await pool.query(`
+          SELECT *
+          FROM Items
+          ORDER BY name DESC;
+          `);
+
+  // raise an error if no item found
+  if (!rows[0]) {
+    throw new CustomError.NotFoundError("No item found");
+  }
+
+  res.status(StatusCodes.OK).send(rows);
+};
