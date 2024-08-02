@@ -2,14 +2,11 @@
 import express from "express";
 export const userRouter = express.Router();
 
-// import the authentication
+// import the authentication and authorization functions
 import {
   authenticateUser,
   authorizePermissions,
 } from "../middleware/authentication.js";
-
-// import the HTTP status codes to send success and failure codes
-import { StatusCodes } from "http-status-codes";
 
 // import the functions that retrieve the information from the database
 import {

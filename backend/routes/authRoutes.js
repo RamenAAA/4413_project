@@ -2,9 +2,6 @@
 import express from 'express';
 export const authRouter = express.Router();
 
-// import the HTTP status codes to send success and failure codes
-import { StatusCodes } from 'http-status-codes';
-
 // import the functions that retrieve the information from the database
 import { 
     register, login, logout

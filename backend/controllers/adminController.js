@@ -24,7 +24,7 @@ export const createProduct = async (req, res) => {
   const id = generateID();
 
   // insert the data into the database
-  const [result] = pool.query(
+  const [result] = await pool.query(
     `
     INSERT INTO 
     Items (id, name, description, category, brand, size, color, price, quantity) 
