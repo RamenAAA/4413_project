@@ -24,6 +24,7 @@ import { authRouter } from "./routes/authRoutes.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { productRouter } from "./routes/productRoutes.js";
 import { reviewRouter } from "./routes/reviewRoutes.js";
+import { orderRouter } from "./routes/orderRoutes.js";
 
 // import error handlers
 import { notFoundMiddleware } from "./middleware/not-found.js";
@@ -48,6 +49,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/orders", orderRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

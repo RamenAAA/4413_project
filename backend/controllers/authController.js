@@ -44,12 +44,7 @@ export const login = async (req, res) => {
   }
 
   // retrieve the user
-  const [result] = await pool.query(
-    `
-        SELECT * FROM Users WHERE email=?
-        `,
-    [email]
-  );
+  const [result] = await pool.query(`SELECT * FROM Users WHERE email=?`, [email]);
 
   // check if the user exists
   if (!result[0]) {
