@@ -19,7 +19,7 @@ h1{
   padding: 5px;
 }
 
-.search, .userInput, .passInput, .billAdrInput, .shipAdrInput{
+.search, .userInput, .passInput, .billAdrInput, .shipAdrInput, .addressInput{
   width: 200px;
   height: 5%;
   padding:5px;
@@ -47,7 +47,7 @@ h1{
   padding-top: 180px;
 }
 
-.home, .item, .signin, .signup, .cart, .profile {
+.home, .item, .signin, .signup, .cart, .profile, .checkout, .order, .admin{
   padding-left: 10%;
   padding-right: 10%;
 }
@@ -76,7 +76,7 @@ h1{
   display: inline-block;
 }
 
-.cart-container{
+.cart-container, .checkout-container{
   display: flex;
   flex-shrink: 0;
   flex-direction: row;
@@ -93,7 +93,7 @@ h1{
   height: 250px;
 }
 
-.buy-container{
+.buy-container, .order-container{
   border: 1px solid lightgray;
   border-radius: 10px;
   padding: 20px;
@@ -167,6 +167,19 @@ h1{
   margin: 20px auto;
   max-width: 20%;
 
+}
+
+.checkout{
+  font-family: sans-serif;
+}
+
+.order{
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.admin{
+  font-family: sans-serif;
 }
 
 label{
