@@ -187,11 +187,12 @@ export const getAllOrders = async (req, res) => {
 
 // function to get single order
 export const getSingleOrder = async (req, res) => {
-    // extract the order ID
-    const orderID = req.params.id;
+  // extract the order ID
+  const orderID = req.params.id;
 
-    // get the order from the database
-    const [result] = await pool.query(`SELECT 
+  // get the order from the database
+  const [result] = await pool.query(
+    `SELECT 
         o.id AS orderID,
         o.dateOfPurchase,
         o.totalAmount,
@@ -235,26 +236,29 @@ export const getSingleOrder = async (req, res) => {
     JOIN 
         Items i ON ph.itemID = i.id
     WHERE 
-        o.id=?`, [orderID]);
+        o.id=?`,
+    [orderID]
+  );
 
-    // raise an error if the order does not exist
-    if(!result[0]) {
-        throw new CustomError.NotFoundError('No order found');
-    }
+  // raise an error if the order does not exist
+  if (!result[0]) {
+    throw new CustomError.NotFoundError("No order found");
+  }
 
-    // check permissions
-    checkPermissions(req.user, result[0].userID);
+  // check permissions
+  checkPermissions(req.user, result[0].userID);
 
-    res.status(StatusCodes.OK).send(result[0]);
+  res.status(StatusCodes.OK).send(result[0]);
 };
 
 // function to get the orders of the current user
 export const getCurrentUserOrders = async (req, res) => {
-    // extract the current user id
-    const userID = req.user.userId;
+  // extract the current user id
+  const userID = req.user.userId;
 
-    // get the orders from the database
-    const [result] = await pool.query(`SELECT 
+  // get the orders from the database
+  const [result] = await pool.query(
+    `SELECT 
         o.id AS orderID,
         o.dateOfPurchase,
         o.totalAmount,
@@ -298,15 +302,17 @@ export const getCurrentUserOrders = async (req, res) => {
     JOIN 
         Items i ON ph.itemID = i.id
     WHERE 
-        o.userID=?`, [userID]);
+        o.userID=?`,
+    [userID]
+  );
 
-    // raise an error if the orders does not exist
-    if(!result[0]) {
-        throw new CustomError.NotFoundError('No orders found');
-    }
+  // raise an error if the orders does not exist
+  if (!result[0]) {
+    throw new CustomError.NotFoundError("No orders found");
+  }
 
-    // check permissions
-    checkPermissions(req.user, result[0].userID);
+  // check permissions
+  checkPermissions(req.user, result[0].userID);
 
-    res.status(StatusCodes.OK).send(result[0]);
+  res.status(StatusCodes.OK).send(result[0]);
 };

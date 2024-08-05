@@ -28,5 +28,5 @@ orderRouter
 
 orderRouter
   .route("/:id")
-  .getSingleOrder(authenticateUser, getSingleOrder)
+  .get(authenticateUser, getSingleOrder)
   .patch(authenticateUser, updateOrder);

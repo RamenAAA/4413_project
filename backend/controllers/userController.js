@@ -36,7 +36,7 @@ export const showCurrentUser = async (req, res) => {
 // update the user information
 export const updateUser = async (req, res) => {
   // extract the information from the request body
-  const { firstName, lastName, email, password, phoneNum } = req.body;
+  const { firstName, lastName, email, password, phone } = req.body;
 
   // raise an error if the password is not provided
   if (!password) {
@@ -59,7 +59,7 @@ export const updateUser = async (req, res) => {
       `UPDATE Users
        SET firstName = ?, lastName = ?, email = ?, phone = ?
        WHERE id = ?`,
-      [firstName, lastName, email, phoneNum, req.user.userId]
+      [firstName, lastName, email, phone, req.user.userId]
     );
 
     // send a OK status

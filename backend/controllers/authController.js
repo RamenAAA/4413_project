@@ -6,7 +6,7 @@ import { attachCookiesToResponse } from "../Utils/index.js";
 
 export const register = async (req, res) => {
   // extract the user registration information from the request body
-  const { firstName, lastName, email, password, role, phoneNum } = req.body;
+  const { firstName, lastName, email, password, role, phone } = req.body;
 
   // extract the address information from the request body
   const { street, city, province, country, postalCode } = req.body;
@@ -15,7 +15,7 @@ export const register = async (req, res) => {
   const [result] = await pool.query(
     `INSERT INTO Users (firstName, lastName, email, password, role, phone) 
      VALUES (?,?,?,?,?,?)`,
-    [firstName, lastName, email, password, role, phoneNum]
+    [firstName, lastName, email, password, role, phone]
   );
 
   // variable to hold the user name, id, and role for the token
@@ -44,7 +44,9 @@ export const login = async (req, res) => {
   }
 
   // retrieve the user
-  const [result] = await pool.query(`SELECT * FROM Users WHERE email=?`, [email]);
+  const [result] = await pool.query(`SELECT * FROM Users WHERE email=?`, [
+    email,
+  ]);
 
   // check if the user exists
   if (!result[0]) {
