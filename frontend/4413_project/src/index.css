@@ -182,6 +182,22 @@ h1{
   font-family: sans-serif;
 }
 
+.sales-table, .inventory-table, .account-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.sales-table th, .sales-table td, .inventory-table th, .inventory-table td, .account-table th, .account-table td{
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.sales-table th ,.inventory-table th, .account-table th{
+  background-color: #f2f2f2;
+}
+
 label{
   font-family: sans-serif;
 }
