@@ -2,4 +2,6 @@
 import { v4 } from "uuid";
 
 // generate the ID
-export const generateID = v4();
+export function generateID() {
+  return v4();
+}

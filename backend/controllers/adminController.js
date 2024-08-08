@@ -34,7 +34,7 @@ export const createProduct = async (req, res) => {
   );
 
   // raise an error if the insertion was unsuccessful
-  if (!result[0]) {
+  if (!result) {
     throw new CustomError.BadRequestError("Operation unsuccessful");
   }
 

@@ -31,6 +31,11 @@ import {
   authorizePermissions,
 } from "../middleware/authentication.js";
 
+// route for uploading image
+productRouter
+  .route("/uploadImage")
+  .post([authenticateUser, authorizePermissions("admin")], uploadImage);
+
 // retrives all the products to send to the client
 productRouter
   .route("/")
