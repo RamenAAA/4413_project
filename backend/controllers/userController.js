@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { pool } from "../db/connect.js";
 import "../errors/index.js";
 import { BadRequestError, UnauthenticatedError } from "../errors/index.js";
-import { checkPermissions } from "../Utils/index.js";
+import { attachCookiesToResponse, checkPermissions } from "../Utils/index.js";
 
 // get the user information for the user specified by id parameter
 export const getSingleUser = async (req, res) => {
@@ -45,10 +45,13 @@ export const updateUser = async (req, res) => {
 
   // get the password from the database
   const [result] = await pool.query(
-    `SELECT password FROM Users
-    WHERE id = ?`,
-    [req.user.userId]
+    `SELECT * FROM Users
+    WHERE email = ?`,
+    [email]
   );
+
+  // verify that the user who is updating the information is the owner or the admin
+  checkPermissions(req.user, result[0].id);
 
   // check if the database password and the provided password match
   if (password !== result[0].password) {
@@ -57,10 +60,17 @@ export const updateUser = async (req, res) => {
     // if they match, update the information for the user
     await pool.query(
       `UPDATE Users
-       SET firstName = ?, lastName = ?, email = ?, phone = ?
+       SET firstName = ?, lastName = ?, phone = ?
        WHERE id = ?`,
-      [firstName, lastName, email, phone, req.user.userId]
+      [firstName, lastName, phone, req.user.userId]
     );
+
+    // update the user name in the cookies
+    req.user.firstName = firstName;
+
+    console.log(req.user.firstName);
+
+    attachCookiesToResponse({res, user: req.user});
 
     // send a OK status
     res.status(StatusCodes.OK).send("User Information updated");

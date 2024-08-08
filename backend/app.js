@@ -13,8 +13,8 @@ import pkg from "cookie-parser";
 const cookieParser = pkg;
 
 // import express file upload package for image upload
-import pkg from "express-fileupload";
-const fileUpload = pkg;
+import pkgs from "express-fileupload";
+const fileUpload = pkgs;
 
 // import database
 import { pool } from "./db/connect.js";

@@ -3,7 +3,7 @@ import express from "express";
 export const reviewRouter = express.Router();
 
 // import the authentication function
-import { authenticateUser } from "../middleware/authentication";
+import { authenticateUser } from "../middleware/authentication.js";
 
 // import the review controller
 import {
@@ -12,7 +12,7 @@ import {
   getSingleReview,
   updateReview,
   deleteReview,
-} from "../controllers/reviewController";
+} from "../controllers/reviewController.js";
 
 // route to create a review (authenticated users only) and get all reviews for a specific product
 reviewRouter.route("/").post(authenticateUser, createReview);

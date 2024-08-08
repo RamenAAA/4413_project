@@ -1,7 +1,7 @@
 // import the SQL database pool, HTTP status codes, and custom error messages
 import { pool } from "../db/connect.js";
 import { StatusCodes } from "http-status-codes";
-import "../errors/index.js";
+import * as CustomError from "../errors/index.js";
 import { attachCookiesToResponse } from "../Utils/index.js";
 
 export const register = async (req, res) => {
@@ -19,7 +19,7 @@ export const register = async (req, res) => {
   );
 
   // variable to hold the user name, id, and role for the token
-  const userInfo = { name: firstName, userId: result[0].insertId, role: role };
+  const userInfo = { name: firstName, userId: result.insertId, role: role };
 
   // creates a cookie with the authenticating token and sends it as a response
   attachCookiesToResponse({ res, user: userInfo });
@@ -78,9 +78,9 @@ export const logout = async (req, res) => {
   // remove the cookie
   res.cookie("token", "logout", {
     httpOnly: true,
-    expires: new Date(Date.now()),
+    expires: new Date(Date.now() + 5 * 1000),
   });
 
   // send the 200 status
-  res.status(StatusCodes.OK);
+  res.status(StatusCodes.OK).send("User logged out");
 };
