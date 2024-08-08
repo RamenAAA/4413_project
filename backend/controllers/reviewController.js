@@ -16,7 +16,7 @@ export const createReview = async (req, res) => {
   const { itemID, userID, rating, comment, reviewDate } = req.body;
 
   // check if the item exists
-  const [result] = await pool.query(`SELECT * FROM Items WHERE id=?`, [itemID]);
+  var [result] = await pool.query(`SELECT * FROM Items WHERE id=?`, [itemID]);
 
   // raise an error if the product does not exist
   if (!result[0]) {
@@ -27,7 +27,7 @@ export const createReview = async (req, res) => {
   [result] = await pool.query(`SELECT * FROM Reviews WHERE userID=?`, [userID]);
 
   // raise an error if the review already exists
-  if (!result[0]) {
+  if (result[0]) {
     throw new CustomError.BadRequestError("Review already exists");
   }
 
@@ -46,7 +46,9 @@ export const getAllReviews = async (req, res) => {
   const itemID = req.params.itemID;
 
   // get all reviews for a specific product
-  const [result] = pool.query(`SELECT * FROM Reviews WHERE itemID=?`, [itemID]);
+  const [result] = await pool.query(`SELECT * FROM Reviews WHERE itemID=?`, [
+    itemID,
+  ]);
 
   // raise an error if reviews do not exist
   if (!result[0]) {
@@ -97,7 +99,7 @@ export const updateReview = async (req, res) => {
     [rating, comment, reviewDate, id]
   );
 
-  req.status(StatusCodes.OK).send("Review updated");
+  res.status(StatusCodes.OK).send("Review updated");
 };
 
 // function to delete review
@@ -119,5 +121,5 @@ export const deleteReview = async (req, res) => {
   // if everything is correct, delete the review
   await pool.query(`DELETE FROM Reviews WHERE id=?`, [id]);
 
-  req.status(StatusCodes.OK).send("Review deleted");
+  res.status(StatusCodes.OK).send("Review deleted");
 };
