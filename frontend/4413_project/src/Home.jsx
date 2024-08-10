@@ -1,26 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './Card.jsx';
-import { PRODUCTS } from './products.js';
 
 function Home() {
     const [category, setCategory] = useState('all');
     const [brand, setBrand] = useState('all');
+    const [products, setProducts] = useState([]);
+    const [error, setError] = useState(null);
+
+    const host = import.meta.env.VITE_HOST;
+    const port = import.meta.env.VITE_PORT;
+
+    // fetch products from api
+    const fetchProducts = async() => {
+        try {
+            let url = `http://${host}:${port}/api/v1/products/`;
+
+            // filter by category or brand
+            if (category !== 'all') {
+                url += '/filter/category/' + category;
+            } else if (brand !== 'all') {
+                url += '/filter/brand/' + brand;
+            }
+
+            // fetch response from backend
+            const response = await fetch(url, {
+                method: "GET",
+            });
+            if (!response.ok) {
+                throw new Error('bad response');
+            }
+            // get data from reponse and set products const as the items returned
+            const data = await response.json();
+            setProducts(data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            setError('Failed to fetch products. Please try again later.');
+        }
+    };
+
+    // Fetch all products on initial load
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    // Fetch filtered products when a filter changes
+    useEffect(() => {
+        fetchProducts();
+    }, [category, brand]);
 
     const handleCategoryChange = (event) => {
         setCategory(event.target.value);
+        setBrand("all");
     };
 
     const handleBrandChange = (event) => {
         setBrand(event.target.value);
+        setCategory("all");
     };
-
-    const filteredProducts = PRODUCTS.filter(product => {
-        // Filter by category
-        if (category !== 'all' && product.category !== category) return false;
-        // Filter by brand
-        if (brand !== 'all' && product.brand !== brand) return false;
-        return true;
-    });
 
     return (
         <div className="home">
@@ -30,8 +66,9 @@ function Home() {
                     Filter by category:&nbsp;
                     <select value={category} onChange={handleCategoryChange}>
                         <option value="all">All</option>
-                        <option value="shirt">Shirts</option>
-                        <option value="pants">Pants</option>
+                        <option value="Topwear">Topwear</option>
+                        <option value="Bottomwear">Bottomwear</option>
+                        <option value="Outerwear">Outerwear</option>
                     </select>
                 </label>
                 <label>
@@ -45,8 +82,8 @@ function Home() {
                 </label>
             </div>
             <div className="products">
-                {filteredProducts.length > 0 ? (
-                    filteredProducts.map(product => (
+                {!error && products.length > 0 ? (
+                    products.map(product => (
                         <Card key={product.id} product={product} />
                     ))
                 ) : (

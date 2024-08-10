@@ -7,20 +7,23 @@ import Item from './Item.jsx'
 import SignIn from './SignIn.jsx'
 import SignUp from './SignUp.jsx'
 import Profile from './Profile.jsx'
+import Checkout from './Checkout.jsx'
 
 
 function App() {
-  return(
+  return (
     <Router>
       <Navbar />
-      <div className="route">      
+      <div className="route">
         <Routes >
-          <Route path="/home" element={<Home/>} />
-          <Route path="/cart" element={<Cart/>} />
-          <Route path="/signin" element={<SignIn/>} />
-          <Route path="/signup" element={<SignUp/>} />
-          <Route path="/profile" element={<Profile/>} />
+          <Route index element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/item/:id" element={<Item />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </div>
 

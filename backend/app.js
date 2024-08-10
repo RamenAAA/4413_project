@@ -16,6 +16,9 @@ const cookieParser = pkg;
 import pkgs from "express-fileupload";
 const fileUpload = pkgs;
 
+// import cors to allow cross origin access
+import cors from "cors";
+
 // import database
 import { pool } from "./db/connect.js";
 
@@ -29,6 +32,13 @@ import { orderRouter } from "./routes/orderRoutes.js";
 // import error handlers
 import { notFoundMiddleware } from "./middleware/not-found.js";
 import { errorHandlerMiddleware } from "./middleware/error-handler.js";
+
+// use cors for all routes
+const corsCfg = {
+  credentials: true,
+  origin: true,
+};
+app.use(cors(corsCfg));
 
 // setup the express routes
 app.use(express.json());

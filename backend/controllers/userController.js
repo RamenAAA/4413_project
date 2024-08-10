@@ -37,7 +37,6 @@ export const showCurrentUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   // extract the information from the request body
   const { firstName, lastName, email, password, phone } = req.body;
-
   // raise an error if the password is not provided
   if (!password) {
     throw new BadRequestError("Please provide the password");
@@ -67,9 +66,6 @@ export const updateUser = async (req, res) => {
 
     // update the user name in the cookies
     req.user.firstName = firstName;
-
-    console.log(req.user.firstName);
-
     attachCookiesToResponse({res, user: req.user});
 
     // send a OK status
