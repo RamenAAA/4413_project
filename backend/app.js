@@ -19,6 +19,18 @@ const fileUpload = pkgs;
 // import cors to allow cross origin access
 import cors from "cors";
 
+// import rate limiter
+import rateLimiter from "express-rate-limit";
+
+// import helmet for securing Express apps
+import helmet from "helmet";
+
+// import xss sanitizer for sanitizing user input
+import { xss } from "express-xss-sanitizer";
+
+// import SQL sanitizer for sanitizing SQL inputs
+import sqlSanitize from "sql-sanitizer";
+
 // import database
 import { pool } from "./db/connect.js";
 
@@ -33,6 +45,10 @@ import { orderRouter } from "./routes/orderRoutes.js";
 import { notFoundMiddleware } from "./middleware/not-found.js";
 import { errorHandlerMiddleware } from "./middleware/error-handler.js";
 
+// setup the express routes
+app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET));
+
 // use cors for all routes
 const corsCfg = {
   credentials: true,
@@ -40,9 +56,18 @@ const corsCfg = {
 };
 app.use(cors(corsCfg));
 
-// setup the express routes
-app.use(express.json());
-app.use(cookieParser(process.env.JWT_SECRET));
+// use rate limiter, helmet, xss sanitizer, and sql sanitizer
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMS: 15 * 60 * 1000,
+    MAX: 60,
+  })
+); // limits the incoming request to 60 requests per 15 minutes
+
+app.use(helmet());
+app.use(xss());
+app.use(sqlSanitize);
 
 // setup the public folder for image uploads
 app.use(express.static("./public"));
