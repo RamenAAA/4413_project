@@ -19,9 +19,6 @@ const fileUpload = pkgs;
 // import cors to allow cross origin access
 import cors from "cors";
 
-// import rate limiter
-import rateLimiter from "express-rate-limit";
-
 // import helmet for securing Express apps
 import helmet from "helmet";
 
@@ -56,14 +53,7 @@ const corsCfg = {
 };
 app.use(cors(corsCfg));
 
-// use rate limiter, helmet, xss sanitizer, and sql sanitizer
-app.set("trust proxy", 1);
-app.use(
-  rateLimiter({
-    windowMS: 15 * 60 * 1000,
-    MAX: 60,
-  })
-); // limits the incoming request to 60 requests per 15 minutes
+// use helmet, xss sanitizer, and sql sanitizer
 
 app.use(helmet());
 app.use(xss());
