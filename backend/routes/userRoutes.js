@@ -14,6 +14,7 @@ import {
   showCurrentUser,
   updateUser,
   updateUserPassword,
+  getAllUsers,
 } from "../controllers/userController.js";
 
 // update the user information and password
@@ -28,3 +29,6 @@ userRouter.get(
   authorizePermissions('admin', 'customer'),
   getSingleUser
 );
+
+// get all user info except password, admin only
+userRouter.get('/all/', authenticateUser, authorizePermissions('admin'), getAllUsers);

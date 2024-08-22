@@ -7,7 +7,8 @@ import { checkPermissions } from "../Utils/checkPermissions.js";
 // function to create an order
 export const createOrder = async (req, res) => {
   // get the cart items
-  const { items, dateOfPurchase } = req.body;
+  const { items, customAddress } = req.body;
+  const dateOfPurchase = new Date();
 
   // raise an error if the items does not exist or the array is empty
   if (!items || items.length < 1) {
@@ -25,7 +26,7 @@ export const createOrder = async (req, res) => {
   for (const item of items) {
     // get the item from the database
     const [result] = await pool.query(`SELECT * FROM Items WHERE id=?`, [
-      item.itemID,
+      item.id,
     ]);
 
     // raise an error if the item does not exist
@@ -41,15 +42,15 @@ export const createOrder = async (req, res) => {
     // insert itemID, amount and price in orderItems
     orderItems = [
       ...orderItems,
-      { itemID: result[0].id, amount: item.amount, price: result[0].price },
+      { itemID: result[0].id, amount: item.quantity, price: result[0].price },
     ];
 
     // calculate the subtotal
-    subtotal += result[0].price * item.amount;
+    subtotal += result[0].price * item.quantity;
   }
 
   // get the address ID stored in the database
-  const [result] = await pool.query(`SELECT id FROM Address WHERE userID=?`, [
+  var [result] = await pool.query(`SELECT id FROM Address WHERE userID=?`, [
     currentUserID,
   ]);
 
@@ -60,16 +61,33 @@ export const createOrder = async (req, res) => {
 
   // extract the address ID
   const addressID = result[0].id;
+  var shippingAddressID = null;
+
+  // if user wants to ship to a custom address, create it and set shippingAddressID to it
+  // else, use the one linked to account
+
+  if (customAddress && Object.keys(customAddress).length > 0) {
+    [result] = await pool.query(
+      `INSERT INTO Address (userID, street, city, province, country, postalCode) VALUES (?,?,?,?,?,?) `,
+      [currentUserID, customAddress.street, customAddress.city, customAddress.province, customAddress.country, customAddress.postal]
+    );
+
+    shippingAddressID = result.insertId;
+  } else shippingAddressID = addressID;
+
+
+
+
 
   // create an order for the current user
   [result] = await pool.query(
     `INSERT INTO Orders (userID, dateOfPurchase, totalAmount, billingAddressID, shippingAddressID, paymentStatus) VALUES
     (?,?,?,?,?,?)`,
-    [currentUserID, dateOfPurchase, subtotal, addressID, addressID, "Pending"]
+    [currentUserID, dateOfPurchase, subtotal, addressID, shippingAddressID, "Pending"]
   );
 
   // extract the order ID
-  const orderID = result[0].insertID;
+  const orderID = result.insertId;
 
   // loop to insert the items in the PurchaseHistory table
   for (const item of orderItems) {
@@ -80,7 +98,7 @@ export const createOrder = async (req, res) => {
     );
   }
 
-  res.status(StatusCodes.CREATED).send("Order Created");
+  res.status(StatusCodes.CREATED).send({ "orderID": orderID });
 };
 
 // function to update the order
@@ -89,7 +107,7 @@ export const updateOrder = async (req, res) => {
   const orderID = req.params.id;
 
   // retrieve the order from the database
-  const [result] = await pool.query(`SELECT * FROM Orders WHERE id=?`, [
+  var [result] = await pool.query(`SELECT * FROM Orders WHERE id=?`, [
     orderID,
   ]);
 
@@ -103,23 +121,24 @@ export const updateOrder = async (req, res) => {
 
   // get the items from the database
   [result] = await pool.query(
-    `SELECT itemID, quantity FROM PurchaseHistory WHERE orderID=?`,
-    [orderID]
-  );
+    `SELECT itemID, quantity FROM PurchaseHistory WHERE orderID=?`, [
+    orderID,
+  ]);
 
   // reduce the inventory of the products
-  for (const item of result[0]) {
+  for (const item of result) {
     // variable to store the current quantity in the database
-    const currentQuantity = 0;
+    let currentQuantity = null;
 
     // get the current quantity
-    const [result] = await pool.query(`SELECT quantity from Items WHERE id=?`, [
+    const [sqlResult] = await pool.query(`SELECT quantity from Items WHERE id=?`, [
       item.itemID,
     ]);
+    currentQuantity = sqlResult[0].quantity - item.quantity;
 
     // update the quantity to the backend
     await pool.query(`UPDATE Items SET quantity=? WHERE id=?`, [
-      currentQuantity - item.quantity,
+      currentQuantity,
       item.itemID,
     ]);
   }
@@ -180,9 +199,9 @@ export const getAllOrders = async (req, res) => {
     JOIN 
         Items i ON ph.itemID = i.id
     ORDER BY 
-        o.id`);
-
-  res.status(StatusCodes.OK).send(result[0]);
+        o.id`
+  );
+  res.status(StatusCodes.OK).send(result);
 };
 
 // function to get single order
@@ -193,7 +212,7 @@ export const getSingleOrder = async (req, res) => {
   // get the order from the database
   const [result] = await pool.query(
     `SELECT 
-        o.id AS orderID,
+        o.id AS orderId,
         o.dateOfPurchase,
         o.totalAmount,
         o.paymentStatus,
@@ -259,11 +278,11 @@ export const getCurrentUserOrders = async (req, res) => {
   // get the orders from the database
   const [result] = await pool.query(
     `SELECT 
-        o.id AS orderID,
+        o.id AS orderId,
         o.dateOfPurchase,
         o.totalAmount,
         o.paymentStatus,
-        u.id AS userID,
+        u.id AS userId,
         u.firstName,
         u.lastName,
         u.email,
@@ -312,7 +331,7 @@ export const getCurrentUserOrders = async (req, res) => {
   }
 
   // check permissions
-  checkPermissions(req.user, result[0].userID);
+  checkPermissions(req.user, result[0].userId);
 
-  res.status(StatusCodes.OK).send(result[0]);
+  res.status(StatusCodes.OK).send(result);
 };

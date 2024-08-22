@@ -4,7 +4,6 @@ import { useRef, useState, useEffect } from 'react';
 
 function SignUp() {
     const form = useRef(null);
-    const [error, setError] = useState(null);
     const [loggedIn, setLoggedIn] = useState(null);
     const host = import.meta.env.VITE_HOST;
     const port = import.meta.env.VITE_PORT;
@@ -40,7 +39,6 @@ function SignUp() {
             setLoggedIn("true");
         } catch (error) {
             console.error('error signing up:', error);
-            setError('Failed to sign up. Please try again later.');
         }
     }
 

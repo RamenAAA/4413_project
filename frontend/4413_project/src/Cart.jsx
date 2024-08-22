@@ -19,6 +19,10 @@ function Cart() {
         var newTotalQuantity = 0;
 
         cart.forEach(item => {
+            // if item is out of stock
+            if (item.quantity < 1) {
+               return; 
+            }
             const product = products.find(product => item.id == product.id);
             newOrderTotal += product.price * item.quantity;
             newTotalQuantity += item.quantity;

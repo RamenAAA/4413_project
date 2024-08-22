@@ -44,8 +44,7 @@ export const createProduct = async (req, res) => {
 // update an existing product
 export const updateProduct = async (req, res) => {
   // extract the information
-  const { name, description, category, brand, size, color, quantity, price } =
-    req.body;
+  const { name, description, category, brand, size, color, quantity, price } = req.body;
 
   const id = req.params.id;
 
@@ -67,7 +66,7 @@ export const deleteProduct = async (req, res) => {
   const id = req.params.id;
 
   // delete the product
-  await pool.query(`DELETE FROM Items WHERE id = ?`, [id]);
+  await pool.query(`DELETE FROM Items WHERE id = ?`, id);
 
   res.status(StatusCodes.OK).send("Item deleted");
 };

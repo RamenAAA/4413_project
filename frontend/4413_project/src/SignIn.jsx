@@ -4,8 +4,8 @@ import { useRef, useState, useEffect } from 'react';
 
 function SignIn() {
     const form = useRef(null);
-    const [error, setError] = useState(null);
     const [loggedIn, setLoggedIn] = useState(null);
+    const [hidden, setHidden] = useState(true);
     const host = import.meta.env.VITE_HOST;
     const port = import.meta.env.VITE_PORT;
 
@@ -36,8 +36,8 @@ function SignIn() {
             localStorage.setItem("isLoggedIn", "true");
             setLoggedIn("true");
         } catch (error) {
+            setHidden(false);
             console.error('error signing in:', error);
-            setError('Failed to sign in. Please try again later.');
         }
     }
 
@@ -61,6 +61,7 @@ function SignIn() {
                             <p>Password</p>
                             <input type="password" name="password" placeholder="Password" className="passInput" />
                             <br></br>
+                            <p hidden={hidden} style={{ color: "red"}}>Login failed. Wrong credentials or account doesn't exist.</p>
                             <p><button type="submit" className='signInButton'>Sign in</button></p>
                             <p><Link to="/signup">Don't have an account? Sign up now.</Link></p>
                         </form></div>

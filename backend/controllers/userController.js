@@ -37,8 +37,9 @@ export const showCurrentUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   // extract the information from the request body
   const { firstName, lastName, email, password, phone } = req.body;
+  const isAdmin = req.user.role == "admin";
   // raise an error if the password is not provided
-  if (!password) {
+  if (!isAdmin && !password) {
     throw new BadRequestError("Please provide the password");
   }
 
@@ -52,8 +53,15 @@ export const updateUser = async (req, res) => {
   // verify that the user who is updating the information is the owner or the admin
   checkPermissions(req.user, result[0].id);
 
+  var userId = null;
+  if (isAdmin) {
+    userId = req.body.userId;
+  } else userId = req.user.userId;
+
+
+
   // check if the database password and the provided password match
-  if (password !== result[0].password) {
+  if (!isAdmin && password !== result[0].password) {
     throw new UnauthenticatedError("Invalid request");
   } else {
     // if they match, update the information for the user
@@ -61,7 +69,7 @@ export const updateUser = async (req, res) => {
       `UPDATE Users
        SET firstName = ?, lastName = ?, phone = ?
        WHERE id = ?`,
-      [firstName, lastName, phone, req.user.userId]
+      [firstName, lastName, phone, userId]
     );
 
     // update the user name in the cookies
@@ -103,4 +111,21 @@ export const updateUserPassword = async (req, res) => {
     );
     res.status(StatusCodes.OK).send("Password updated");
   }
+};
+
+// get all userId, name, email, phone and role. admin only
+export const getAllUsers = async (req, res) => {
+
+  const [result] = await pool.query(
+    `SELECT 
+      u.id AS userId,
+      u.firstName,
+      u.lastName,
+      u.email,
+      u.phone,
+      u.role
+      FROM
+      Users u`,
+  );
+  res.status(StatusCodes.OK).send(result);
 };

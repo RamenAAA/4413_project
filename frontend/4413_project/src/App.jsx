@@ -8,6 +8,8 @@ import SignIn from './SignIn.jsx'
 import SignUp from './SignUp.jsx'
 import Profile from './Profile.jsx'
 import Checkout from './Checkout.jsx'
+import Order from './Order.jsx'
+import Admin from './Admin.jsx'
 
 
 function App() {
@@ -24,6 +26,9 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/ordersummary" element={<Order />} />
+          <Route path="/admin" element={<Admin />} />
+
         </Routes>
       </div>
 

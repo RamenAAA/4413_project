@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card.jsx';
+import { fetchProducts } from './apiCalls.js';
 
 function Home() {
     const [category, setCategory] = useState('all');
@@ -7,36 +8,21 @@ function Home() {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
 
-    const host = import.meta.env.VITE_HOST;
-    const port = import.meta.env.VITE_PORT;
-
     // fetch products from api
-    const fetchProducts = async() => {
+
+    const loadProducts = async () => {
         try {
-            let url = `http://${host}:${port}/api/v1/products/`;
-
-            // filter by category or brand
-            if (category !== 'all') {
-                url += '/filter/category/' + category;
-            } else if (brand !== 'all') {
-                url += '/filter/brand/' + brand;
-            }
-
-            // fetch response from backend
-            const response = await fetch(url, {
-                method: "GET",
-            });
-            if (!response.ok) {
-                throw new Error('bad response');
-            }
-            // get data from reponse and set products const as the items returned
-            const data = await response.json();
+            const data = await fetchProducts(category, brand);
             setProducts(data);
         } catch (error) {
             console.error('Error fetching products:', error);
             setError('Failed to fetch products. Please try again later.');
         }
     };
+
+    useEffect(() => {
+        loadProducts();
+    }, [, category, brand]);
 
     // Fetch all products on initial load
     useEffect(() => {
