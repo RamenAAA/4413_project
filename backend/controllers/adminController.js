@@ -44,7 +44,8 @@ export const createProduct = async (req, res) => {
 // update an existing product
 export const updateProduct = async (req, res) => {
   // extract the information
-  const { name, description, category, brand, size, color, quantity, price } = req.body;
+  const { name, description, category, brand, size, color, quantity, price } =
+    req.body;
 
   const id = req.params.id;
 
@@ -78,6 +79,9 @@ export const uploadImage = async (req, res) => {
     throw new CustomError.BadRequestError("No File Uploaded");
   }
 
+  // get the product ID for the image
+  const productID = req.params.id;
+
   // get the image data
   const productImage = req.files.image;
 
@@ -106,7 +110,12 @@ export const uploadImage = async (req, res) => {
   await productImage.mv(imagePath);
 
   // add the image path to the database
-  await pool.query(`INSERT INTO Items (image) VALUES (?)`, [imagePath]);
+  await pool.query(
+    `UPDATE Items
+     SET image = ?
+     WHERE id = ?`,
+    [imagePath, productID]
+  );
 
   res.status(StatusCodes.OK).send(`/uploads/${productImage.name}`);
 };

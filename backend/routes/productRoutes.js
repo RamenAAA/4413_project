@@ -33,7 +33,7 @@ import {
 
 // route for uploading image
 productRouter
-  .route("/uploadImage")
+  .route("/uploadImage/:id")
   .post([authenticateUser, authorizePermissions("admin")], uploadImage);
 
 // retrives all the products to send to the client
