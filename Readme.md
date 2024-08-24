@@ -24,7 +24,7 @@ The instructions on how to run the project on the docker and local machine are a
 7. The SQL file will open in the editor. Select the SQL code and run it to setup the database.
 8. Back to the terminal, navigate to `backend` folder and run `npm install` to install the necessary libraries. Make sure that Node.JS v20.15.1 is installed (it includes NPM).
 9. Then, run `npm start` to run the server.
-9. In terminal, navigate back to the project directory, and then open `frontend -> 4413_project`.
+9. In another terminal window, navigate back to the project directory, and then open `frontend -> 4413_project`.
 10. Run `npm install` to install the libraries and then, run `npm run build` to build the frontend.
 11. Once the build is complete, run `npm run preview` and copy the link associated with 'Local' in the terminal output. Paste the link in the browser to start the website.
 
