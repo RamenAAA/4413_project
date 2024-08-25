@@ -6,7 +6,6 @@ export const productRouter = express.Router();
 import {
   getAllItems,
   getSingleItem,
-  getItemsByName,
   getItemsByCategory,
   getItemsByBrand,
   getItemsBySize,
@@ -15,6 +14,7 @@ import {
   getItemsSortedByPriceDesc,
   getItemsSortedByNameAsc,
   getItemsSortedByNameDesc,
+  searchItems,
 } from "../controllers/productController.js";
 
 // import the admin functions
@@ -49,9 +49,7 @@ productRouter
   .post([authenticateUser, authorizePermissions("admin")], updateProduct)
   .delete([authenticateUser, authorizePermissions("admin")], deleteProduct);
 
-// retrieve the products filtered using name, category, brand, size, and color
-productRouter.route("/filter/name/:name").get(getItemsByName); // end of name route
-
+// retrieve the products filtered using category, brand, size, and color
 productRouter.route("/filter/category/:category").get(getItemsByCategory); // end of category route
 
 productRouter.route("/filter/brand/:brand").get(getItemsByBrand); // end of brand route
@@ -68,3 +66,7 @@ productRouter.route("/sort/price/desc").get(getItemsSortedByPriceDesc); // end o
 productRouter.route("/sort/name/asc").get(getItemsSortedByNameAsc); // end of sort by name ASC route
 
 productRouter.route("/sort/name/desc").get(getItemsSortedByNameDesc); // end of sort by name ASC route
+
+// search items using SQL LIKE
+productRouter.route("/search/:search").get(searchItems);
+

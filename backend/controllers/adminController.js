@@ -11,8 +11,10 @@ import { StatusCodes } from "http-status-codes";
 import { generateID } from "../Utils/index.js";
 
 // import the path module for uploading images
-import pkg from "path";
-const path = pkg;
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // create a new product
 export const createProduct = async (req, res) => {

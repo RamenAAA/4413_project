@@ -1,7 +1,8 @@
 import CartItems from "./CartItems";
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { getCart } from "./cartFunctions"
+import { getCart } from "./services/cartService.js"
+import { fetchBasicUserInfo } from "./services/userService.js";
 
 function Cart() {
     const [products, setProducts] = useState([]);
@@ -21,7 +22,7 @@ function Cart() {
         cart.forEach(item => {
             // if item is out of stock
             if (item.quantity < 1) {
-               return; 
+                return;
             }
             const product = products.find(product => item.id == product.id);
             newOrderTotal += product.price * item.quantity;
@@ -33,20 +34,24 @@ function Cart() {
     };
 
     // go to checkout page
-    const checkout = () => {
-        if (localStorage.getItem("isLoggedIn") != "true") {
+    const checkout = async () => {
+
+        try {
+            await fetchBasicUserInfo();
+            if (products < 1) {
+                setHidden(false);
+                setTimeout(() => {
+                    setHidden(true);
+                }, 2000);
+                return;
+            } else navigate("/checkout", { state: { orderTotal: orderTotal, totalQuantity: totalQuantity } });
+        } catch (error) {
             setCheckoutFlag(1);
             setTimeout(() => {
                 navigate("/signin");
-            }, 1500);
-        } else if (products < 1) {
-            setHidden(false);
-            setTimeout(() => {
-                setHidden(true);
-            }, 1500);
-            return;
+            }, 2000);
         }
-        else navigate("/checkout", {state: {orderTotal: orderTotal, totalQuantity: totalQuantity}});
+
     }
 
     // on load get the cart products
@@ -70,7 +75,10 @@ function Cart() {
                                 ))
                             ) : (
                                 <><p>No products in cart</p>
-                                <p hidden={hidden}>Nothing to checkout</p></>
+                                    {!hidden &&
+                                        <p>Nothing to checkout</p>
+                                    }
+                                </>
                             )}
                         </div>
                     )}

@@ -55,13 +55,16 @@ app.use(cors(corsCfg));
 
 // use helmet, xss sanitizer, and sql sanitizer
 
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(xss());
 app.use(sqlSanitize);
 
 // setup the public folder for image uploads
-app.use(express.static("./public"));
+app.use(express.static("public"));
 app.use(fileUpload());
+
 
 // add the home router
 app.get("/api/v1", (req, res) => {

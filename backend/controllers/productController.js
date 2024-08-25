@@ -43,23 +43,26 @@ export const getSingleItem = async (req, res) => {
   res.status(StatusCodes.OK).send(rows);
 };
 
-// get item by name
-export const getItemsByName = async (req, res) => {
-  // extract the name
-  const name = req.params.name;
+// search items using SQL LIKE operator, search all fields except id, price, quantity, size
+export const searchItems = async (req, res) => {
+  const search = `%${req.params.search}%`;
 
   // sql query to get the items by name
   const [rows] = await pool.query(
     `
-        SELECT * 
-        FROM Items 
-        WHERE name = ?
+        SELECT * FROM Items 
+        WHERE LOWER(name) LIKE LOWER(?) 
+        OR LOWER(description) LIKE LOWER(?) 
+        OR LOWER(category) LIKE LOWER(?) 
+        OR LOWER(brand) LIKE LOWER(?) 
+        OR LOWER(color) LIKE LOWER(?)
         `,
-    [name]
+    [search, search, search, search, search]
   );
 
-  // raise an error if no item found
-  if (!rows[0]) {
+  // raise an error if no items found
+  console.log(rows);
+  if (!rows) {
     throw new CustomError.NotFoundError("No item found");
   }
 

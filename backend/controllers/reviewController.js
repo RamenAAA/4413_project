@@ -13,7 +13,8 @@ import { checkPermissions } from "../Utils/index.js";
 // function to create a review
 export const createReview = async (req, res) => {
   // extract the information from req.body
-  const { itemID, userID, rating, comment, reviewDate } = req.body;
+  const { itemID, userID, rating, comment } = req.body;
+  const reviewDate = new Date();
 
   // check if the item exists
   var [result] = await pool.query(`SELECT * FROM Items WHERE id=?`, [itemID]);
@@ -24,7 +25,7 @@ export const createReview = async (req, res) => {
   }
 
   // check if user has already submitted a review
-  [result] = await pool.query(`SELECT * FROM Reviews WHERE userID=?`, [userID]);
+  [result] = await pool.query(`SELECT * FROM Reviews WHERE userID=? AND itemID=?`, [userID, itemID]);
 
   // raise an error if the review already exists
   if (result[0]) {
@@ -46,7 +47,11 @@ export const getAllReviews = async (req, res) => {
   const itemID = req.params.itemID;
 
   // get all reviews for a specific product
-  const [result] = await pool.query(`SELECT * FROM Reviews WHERE itemID=?`, [
+  const [result] = await pool.query(
+    `SELECT Reviews.*, Users.firstName 
+     FROM Reviews LEFT JOIN Users
+     ON Reviews.UserID = Users.id
+     WHERE itemID=?`, [
     itemID,
   ]);
 
@@ -80,7 +85,8 @@ export const updateReview = async (req, res) => {
   const id = req.params.id;
 
   // extract the updated information
-  const { rating, comment, reviewDate } = req.body;
+  const { rating, comment } = req.body;
+  const reviewDate = new Date();
 
   // get the review
   const [result] = await pool.query(`SELECT * FROM Reviews WHERE id=?`, [id]);
@@ -93,7 +99,7 @@ export const updateReview = async (req, res) => {
   // check permissions that the user who is requesting the deletion is the owner of that review
   checkPermissions(req.user, result[0].userID);
 
-  // if everything is correct, delete the review
+  // if everything is correct, update the review
   await pool.query(
     `UPDATE Reviews SET rating=?, comment=?, reviewDate=? WHERE id=?`,
     [rating, comment, reviewDate, id]

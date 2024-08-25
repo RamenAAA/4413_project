@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getImage } from "./services/productService.js";
 
 function CartItems({ product, onQuantityChange, editable }) {
     const [quantity, setQuantity] = useState(1);
@@ -65,7 +66,11 @@ function CartItems({ product, onQuantityChange, editable }) {
     return (
         <div className="cartItem">
             <Link to={`/item/${product.id}`}>
-                <img src="https://via.placeholder.com/150" alt={product.name} />
+                {product.image ? (
+                    <img src={getImage(product)}></img>
+                ) : (
+                    <img src="https://via.placeholder.com/500"></img>
+                )}
             </Link>
             <div className="cartInfo">
                 <h3>{product.name}</h3>
@@ -85,7 +90,7 @@ function CartItems({ product, onQuantityChange, editable }) {
                         </label></>
                 ) : (
                     <><h3>Price ${product.price}</h3>
-                    <p>Quantity: {quantity}</p></>
+                        <p>Quantity: {quantity}</p></>
                 )}
             </div>
         </div>

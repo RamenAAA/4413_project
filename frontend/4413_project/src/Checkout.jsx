@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import CartItems from "./CartItems";
-import { getCart } from "./cartFunctions"
+import CartItems from "./CartItems.jsx";
+import { getCart } from "./services/cartService.js";
+import { submitOrder } from "./services/orderService.js";
+
 
 function Checkout() {
-    const host = import.meta.env.VITE_HOST;
-    const port = import.meta.env.VITE_PORT;
 
     const [products, setProducts] = useState([]);
     const [useCustom, setCustom] = useState(false);
@@ -14,7 +14,7 @@ function Checkout() {
     const [province, setProvince] = useState("");
     const [country, setCountry] = useState("Canada");
     const [postal, setPostal] = useState("");
-    const [display, setDisplay] = useState("none");
+    const [inputError, setInputError] = useState(false);
 
 
     // get the values passed from cart via state
@@ -24,10 +24,9 @@ function Checkout() {
 
     const handleOrder = async (event) => {
         event.preventDefault();
-
-        console.log(localStorage.getItem("cart"));
         var customAddress = [];
 
+        // if customer wants to use an address different to one on their account
         if (useCustom) {
             customAddress = {
                 street: street,
@@ -38,40 +37,23 @@ function Checkout() {
             }
         }
 
-        if (Object.values(customAddress).some(info => info == null || info == "") ) {          
-            setDisplay("");
+        if (Object.values(customAddress).some(info => info == null || info == "")) {
+            setInputError(true);
             return;
         }
 
         try {
-            let url = `http://${host}:${port}/api/v1/orders`;
-
-            const response = await fetch(url, {
-                method: "POST",
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    items: JSON.parse(localStorage.getItem("cart")),
-                    customAddress: customAddress
-                }),
-            });
-            if (!response.ok) {
-                throw new Error('bad response');
-            }
+            const resp = await submitOrder(customAddress);
             // successful order, empty cart and send to order summary page
-            const resp = await response.json();
             localStorage.removeItem("cart");
             navigate("/ordersummary", { state: { orderID: resp.orderID, fromRedirect: true } });
-
         } catch (error) {
-            console.error('error processing order:', error);
+            console.error('error processing order: ', error);
         }
     }
 
     // this is here because cartItems requires a function because of Cart, easy fix
-    const useless = () => {}
+    const useless = () => { }
 
     const toggleCustom = () => {
         setCustom(!useCustom);
@@ -104,7 +86,9 @@ function Checkout() {
 
                         {useCustom ? (
                             <div>
-                                <p style={{ color: "red", display: display }}><b>Please input correct shipping information into all fields</b></p>
+                                {inputError &&
+                                    <p style={{ color: "red" }}><b>Please input correct shipping information into all fields</b></p>
+                                }
                                 <p>Street Address</p>
                                 <input type="text" name="street" placeholder="Street Address" className="billAdrInput" value={street} onChange={(e) => { setStreet(e.target.value) }} required />
                                 <p>City</p>

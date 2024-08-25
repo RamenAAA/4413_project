@@ -2,31 +2,6 @@
 const host = import.meta.env.VITE_HOST;
 const port = import.meta.env.VITE_PORT;
 
-export const fetchProducts = async (category, brand) => {
-    try {
-        let url = `http://${host}:${port}/api/v1/products`;
-
-        // filter by category or brand
-        if (category !== 'all') {
-            url += '/filter/category/' + category;
-        } else if (brand !== 'all') {
-            url += '/filter/brand/' + brand;
-        }
-
-        // fetch response from backend
-        const response = await fetch(url, {
-            method: "GET",
-        });
-        if (!response.ok) {
-            throw new Error('bad response');
-        }
-        // get data from response and return it
-        return await response.json();
-    } catch (error) {
-        throw error; // Re-throw the error so it can be handled by the caller
-    }
-};
-
 export const submitEdit = async (body, id) => {
     try {
         let url = `http://${host}:${port}/api/v1/products/${id}`;
@@ -128,39 +103,40 @@ export const getAllUsers = async () => {
     }
 };
 
-export const getUserHistory = async () => {
+export const createItem = async (newProduct) => {
     try {
-        let url = `http://${host}:${port}/api/v1/orders/showAllMyOrders`;
+        let url = `http://${host}:${port}/api/v1/products/`;
 
         const response = await fetch(url, {
-            method: "GET",
+            method: "POST",
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: newProduct
         });
         if (!response.ok) {
             throw new Error('bad response');
         }
-        const resp = await response.json();
-        return resp;
+        return response;
     } catch (error) {
         throw error;
     }
 };
 
-export const logout = async () => {
+export const submitImage = async (imageFile, id) => {
+    const formData = new FormData();
+    formData.append("image", imageFile);
     try {
-        let url = `http://${host}:${port}/api/v1/auth/logout`;
+        let url = `http://${host}:${port}/api/v1/products/uploadImage/${id}`;
 
         const response = await fetch(url, {
-            method: "GET",
+            method: "POST",
             credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            body: formData
         });
         if (!response.ok) {
+            console.log(response);
             throw new Error('bad response');
         }
         return response;

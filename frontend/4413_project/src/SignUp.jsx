@@ -1,53 +1,42 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRef, useState, useEffect } from 'react';
+import { signUp } from "./services/authService.js";
+import { fetchBasicUserInfo } from './services/userService.js';
 
 function SignUp() {
     const form = useRef(null);
     const [loggedIn, setLoggedIn] = useState(null);
-    const host = import.meta.env.VITE_HOST;
-    const port = import.meta.env.VITE_PORT;
 
     const redirect = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        var info = new FormData(form.current);
+        const info = new FormData(form.current);
         try {
-            info = Object.fromEntries(info.entries());
-            info.role = "customer";
-            const jsonInfo = JSON.stringify(info);
-            console.log(jsonInfo);
-            let url = `http://${host}:${port}/api/v1/auth/register`;
-
-            // fetch response from backend
-            const response = await fetch(url, {
-                method: "POST",
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: jsonInfo,
-            });
-            if (!response.ok) {
-                throw new Error('bad response');
-            }
-            // get data from reponse, set isLoggedIn
-            const resp = await response.json();
+            const resp = await signUp(info);
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("user", JSON.stringify(resp));
-            setLoggedIn("true");
+            setLoggedIn(true);
         } catch (error) {
-            console.error('error signing up:', error);
+            console.error("error signing up:", error);
         }
     }
 
     useEffect(() => {
-        if (localStorage.getItem("isLoggedIn") == "true") {
-            setTimeout(() => {
-                redirect("/home");
-            }, 1500);
+        const doRedirect = async () => {
+            try {
+                if (await fetchBasicUserInfo()) {
+                    setTimeout(() => {
+                        redirect("/home");
+                    }, 1000);
+                }
+            } catch (error) {
+                setLoggedIn(false);
+                console.error("not logged in: ", error);
+            }
         }
+        doRedirect();
     }, [, loggedIn]);
 
 

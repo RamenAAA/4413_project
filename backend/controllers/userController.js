@@ -54,31 +54,45 @@ export const updateUser = async (req, res) => {
   checkPermissions(req.user, result[0].id);
 
   var userId = null;
-  if (isAdmin) {
-    userId = req.body.userId;
-  } else userId = req.user.userId;
+  const sentUserId = req.body.userId;
+  // check which id to use
+  if (isAdmin && sentUserId) {
+    // admin updating someone else's account
+    userId = sentUserId;
+  } else userId = req.user.userId; //user updating their own account
 
 
-
-  // check if the database password and the provided password match
-  if (!isAdmin && password !== result[0].password) {
-    throw new UnauthenticatedError("Invalid request");
-  } else {
-    // if they match, update the information for the user
-    await pool.query(
-      `UPDATE Users
+  if (!isAdmin) {
+    console.log("not admin");
+    // if not an admin, then the passwords must match
+    if (password !== result[0].password) {
+      throw new UnauthenticatedError("Invalid request");
+    }
+  } else if (userId == req.user.userId) {
+    console.log("is admin");
+    // if admin is updating their own account, passwords must match
+    if (!password) {
+      throw new UnauthenticatedError("Invalid request");
+    }
+    if (password !== result[0].password) {
+      console.log("pas no match");
+      throw new UnauthenticatedError("Invalid request");
+    }
+  }
+  // if conditions met, update the information for the user
+  await pool.query(
+    `UPDATE Users
        SET firstName = ?, lastName = ?, phone = ?
        WHERE id = ?`,
-      [firstName, lastName, phone, userId]
-    );
+    [firstName, lastName, phone, userId]
+  );
 
-    // update the user name in the cookies
-    req.user.firstName = firstName;
-    attachCookiesToResponse({res, user: req.user});
+  // update the user name in the cookies
+  req.user.firstName = firstName;
+  attachCookiesToResponse({ res, user: req.user });
 
-    // send a OK status
-    res.status(StatusCodes.OK).send("User Information updated");
-  }
+  // send a OK status
+  res.status(StatusCodes.OK).send("User Information updated");
 };
 
 // update the user password
