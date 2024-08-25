@@ -65,7 +65,6 @@ app.use(sqlSanitize);
 app.use(fileUpload());
 app.use(express.static('public'));
 
-
 // add the home router
 app.get("/api/v1", (req, res) => {
   console.log(req.signedCookies);

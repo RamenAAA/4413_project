@@ -103,10 +103,10 @@ INSERT INTO Address (userID, street, city, province, country, postalCode) VALUES
 (1, '567 Yonge St', 'Toronto', 'ON', 'Canada', 'K1E 6T5'),
 (2, '943 Avenue Rd', 'Toronto', 'ON', 'Canada', 'M1C 6K5');
 
-INSERT INTO Items (id, name, description, category, brand, size, color, price, quantity) VALUES
-('cl001', 'T-Shirt', 'Cotton T-Shirt', 'Topwear', 'BrandA', 'M', 'Red', 19.99, 100),
-('cl002', 'Jeans', 'Denim Jeans', 'Bottomwear', 'BrandB', '32', 'Blue', 49.99, 50),
-('cl003', 'Jacket', 'Leather Jacket', 'Outerwear', 'BrandC', 'L', 'Black', 129.99, 25);
+INSERT INTO Items (id, name, description, category, brand, size, color, price, quantity, image) VALUES
+('cl001', 'T-Shirt', 'Cotton T-Shirt', 'Topwear', 'BrandA', 'M', 'Red', 19.99, 100, 'red_tshirt1.jpg'),
+('cl002', 'Jeans', 'Denim Jeans', 'Bottomwear', 'BrandB', '32', 'Blue', 49.99, 50, 'red_tshirt1.jpg'),
+('cl003', 'Jacket', 'Leather Jacket', 'Outerwear', 'BrandC', 'L', 'Black', 129.99, 25, 'red_tshirt1.jpg');
 
 INSERT INTO Orders (userID, dateOfPurchase, totalAmount, billingAddressID, shippingAddressID, paymentStatus) VALUES
 (1, '2023-07-19 10:00:00', 69.97, 1, 1, 'Paid');
