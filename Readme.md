@@ -10,9 +10,10 @@ The instructions on how to run the project on the docker and local machine are a
 1. Download the project zip and extract the project to the desired location.
 2. Open Terminal and navigate to the project location.
 3. Run Docker desktop.
-4. In the terminal, run `docker-compose up --build`.
-5. Once the deployment is over, open the Docker desktop and click on the link under Ports section.
-6. The link will open the website page on the default browser.
+4. Ensure that there are no previous versions of the project. If there are, delete them before proceeding.
+5. In the terminal, run `docker-compose up --build`.
+6. Once the deployment is over, open the Docker desktop and click on the link under Ports section.
+7. The link will open the website page on the default browser.
 
 ## Local Machine
 1. Follow steps 1-3 from Docker installation instructions.

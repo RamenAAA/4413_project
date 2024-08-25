@@ -105,8 +105,15 @@ INSERT INTO Address (userID, street, city, province, country, postalCode) VALUES
 
 INSERT INTO Items (id, name, description, category, brand, size, color, price, quantity, image) VALUES
 ('cl001', 'T-Shirt', 'Cotton T-Shirt', 'Topwear', 'BrandA', 'M', 'Red', 19.99, 100, 'red_tshirt1.jpg'),
-('cl002', 'Jeans', 'Denim Jeans', 'Bottomwear', 'BrandB', '32', 'Blue', 49.99, 50, 'red_tshirt1.jpg'),
-('cl003', 'Jacket', 'Leather Jacket', 'Outerwear', 'BrandC', 'L', 'Black', 129.99, 25, 'red_tshirt1.jpg');
+('cl002', 'Jeans', 'Denim Jeans', 'Bottomwear', 'BrandB', '32', 'Blue', 49.99, 50, 'blue_jeans.jpg'),
+('cl003', 'Jacket', 'Leather Jacket', 'Outerwear', 'BrandC', 'L', 'Black', 129.99, 25, 'black_jacket.jpg'),
+('cl004', 'Shirt', 'Linen Shirt', 'Topwear', 'BrandD', 'XL', 'White', 69.99, 80, 'white_linen.jpg'),
+('cl005', 'Pants', 'Dress Pants', 'Bottomwear', 'BrandE', '34', 'Black', 89.99, 65, 'black_dress_pants.jpg'),
+('cl006', 'Jacket', 'Denim Jacket', 'Outerwear', 'BrandA', 'S', 'Blue', 149.99, 45, 'blue_denim_jacket.jpg'),
+('cl007', 'Hat', 'Baseball Hat', 'Accessory', 'BrandF', 'M', 'Red and White', 29.99, 250, 'red_white_baseball_hat.jpg'),
+('cl008', 'Polo', 'Sweater Polo', 'Topwear', 'BrandB', 'XXL', 'Navy', 59.99, 120, 'navy_sweater_polo.jpg'),
+('cl009', 'Joggers', 'Drawstring Joggers', 'Bottomwear', 'BrandA', 'L', 'Grey', 49.99, 155, 'grey_joggers.jpg'),
+('cl0010', 'Coats', 'Trench Coat', 'Outerwear', 'BrandF', 'L', 'Brown', 349.99, 30, 'brown_trench_coat.jpg');
 
 INSERT INTO Orders (userID, dateOfPurchase, totalAmount, billingAddressID, shippingAddressID, paymentStatus) VALUES
 (1, '2023-07-19 10:00:00', 69.97, 1, 1, 'Paid');
