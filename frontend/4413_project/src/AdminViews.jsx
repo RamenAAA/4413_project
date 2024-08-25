@@ -307,6 +307,8 @@ export const AddItemView = ({ onClose }) => {
     };
     const [editableProduct, setEditableProduct] = useState(emptyProduct);
     const [editComplete, setEditComplete] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
+    const [imageError, setImageError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -317,14 +319,33 @@ export const AddItemView = ({ onClose }) => {
     };
 
     const handleSubmit = async () => {
+        if (!imageFile) {
+            setImageError("No image file selected");
+            return;
+        }
         try {
-            const resp = await createItem(JSON.stringify(editableProduct));
-            console.log(resp);
+            const createResp = await createItem(JSON.stringify(editableProduct));
+            const imgResp = await submitImage(imageFile, createResp.productId);
             setEditComplete(true);
         } catch (error) {
-            console.error('Error updating product:', error);
+            console.error('Error updating product: ', error);
+            setImageError("error uploading image");
         }
     };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file.size > 1024 * 1024) {
+            setImageError("Please upload a 1MB image.");
+            return;
+        }
+        if (!file.type.startsWith("image")) {
+            setImageError("Please upload in image");
+            return;
+        }
+        setImageError(null);
+        setImageFile(file);
+    }
 
     const handleDiscard = () => {
         setEditableProduct(emptyProduct);
@@ -343,6 +364,20 @@ export const AddItemView = ({ onClose }) => {
                             <label htmlFor="ID"><b>ID:</b></label>
                             <input type="text" id="ID" name="id" value={editableProduct.id} onChange={handleChange} />
                         </div> */}
+
+                        <div className="adminEditFields">
+                            <label htmlFor="image"><b>Add Image to Product: </b></label>
+                            <input
+                                type="file"
+                                id="image"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleImageChange} />
+                        </div>
+                        {imageError &&
+                            <span style={{ color: "red" }}>{imageError}</span>
+                        }
+                        <hr />
 
                         <AdminEdit editableProduct={editableProduct} handleChange={handleChange} />
                         <button type="button" onClick={handleSubmit}>Save Changes</button>

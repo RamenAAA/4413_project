@@ -118,7 +118,8 @@ export const createItem = async (newProduct) => {
         if (!response.ok) {
             throw new Error('bad response');
         }
-        return response;
+        const resp = await response.json();
+        return resp;
     } catch (error) {
         throw error;
     }

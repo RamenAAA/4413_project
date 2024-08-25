@@ -40,7 +40,10 @@ export const createProduct = async (req, res) => {
     throw new CustomError.BadRequestError("Operation unsuccessful");
   }
 
-  res.status(StatusCodes.OK).send("Item inserted");
+  res.status(StatusCodes.OK).json({
+    message: "Product created successfully",
+    productId: id
+  });
 };
 
 // update an existing product
