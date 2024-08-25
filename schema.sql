@@ -97,7 +97,7 @@ CREATE TABLE Reviews (
 INSERT INTO Users (firstName, lastName, email, password, role, phone) VALUES
 ('Amanda', 'Brown', 'amanda.brown@gmail.com', 'password123', 'customer', '647-123-4567'),
 ('James', 'Smith', 'james.smith@gmail.com', 'password456', 'customer', '416-123-8569'),
-('Admin', 'User', 'admin@gmail.com', 'adminpassword', 'admin', NULL);
+('Admin', 'User', 'test@mark.com', 'adminpassword', 'admin', NULL);
 
 INSERT INTO Address (userID, street, city, province, country, postalCode) VALUES
 (1, '567 Yonge St', 'Toronto', 'ON', 'Canada', 'K1E 6T5'),

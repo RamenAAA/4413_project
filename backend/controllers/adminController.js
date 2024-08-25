@@ -104,7 +104,7 @@ export const uploadImage = async (req, res) => {
 
   // set the image path to the public/uploads
   const imagePath = path.join(
-    __dirname,
+    import.meta.dirname,
     "../public/uploads/" + `${productImage.name}`
   );
 
@@ -116,7 +116,7 @@ export const uploadImage = async (req, res) => {
     `UPDATE Items
      SET image = ?
      WHERE id = ?`,
-    [imagePath, productID]
+    [productImage.name, productID]
   );
 
   res.status(StatusCodes.OK).send(`/uploads/${productImage.name}`);

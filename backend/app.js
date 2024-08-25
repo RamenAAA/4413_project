@@ -62,8 +62,8 @@ app.use(xss());
 app.use(sqlSanitize);
 
 // setup the public folder for image uploads
-app.use(express.static("public"));
 app.use(fileUpload());
+app.use(express.static('public'));
 
 
 // add the home router
